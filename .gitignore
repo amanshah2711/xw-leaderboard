@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 venv/
+
+instance/
+__pycache__/
+*.db
+

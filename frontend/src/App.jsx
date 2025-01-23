@@ -1,16 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import Login from './Login';
+import Leaderboard from './Leaderboard';
+import Register from './Register';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [info, setInfo] = useState({
+    email : "potato@gmail.com",
+    password: "",
+    data: null,
+    success: false,
+    registration: false,
+    message: "" 
+  })
+  const handleChange = (newInfo) => {
+   
+    setInfo((prevInfo) => ({
+      ...prevInfo, 
+      ...newInfo
+    }));
+  }; 
   return (
     <div className='container'>
-        <Login/>
+        {info.registration ? <Register info={info} update={handleChange}/> : (info.success ?  <Leaderboard/> : <Login info={info} update={handleChange}/>) }
     </div>
   )
 }
