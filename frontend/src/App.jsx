@@ -1,30 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
-import Login from './Login';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Leaderboard from './Leaderboard';
-import Register from './Register';
+import NavBar from './NavBar';
+import CookieManager from './CookieManager';
+import HomePage from './HomePage';
 
 function App() {
-  const [info, setInfo] = useState({
-    email : "potato@gmail.com",
-    password: "",
-    data: null,
-    success: false,
-    registration: false,
-    message: "" 
-  })
-  const handleChange = (newInfo) => {
-   
-    setInfo((prevInfo) => ({
-      ...prevInfo, 
-      ...newInfo
-    }));
-  }; 
   return (
-    <div className='container'>
-        {info.registration ? <Register info={info} update={handleChange}/> : (info.success ?  <Leaderboard/> : <Login info={info} update={handleChange}/>) }
-    </div>
+    <Router>
+      <NavBar/>
+      <Routes>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/leaderboard" element={<Leaderboard/>}/>
+        <Route path="/cookies" element={<CookieManager/>}/>
+      </Routes>
+    </Router>
   )
 }
 
