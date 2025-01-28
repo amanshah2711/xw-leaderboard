@@ -77,7 +77,7 @@ def sync(date_string):
         if user.encrypted_nyt_cookie: # Make sure to check and validate cookies
             puzzle_statistics = get_puzzle_statistics(date_string, decrypt_cookie(user.encrypted_nyt_cookie))
             if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
-                entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == id, CrosswordData.day == target_date).first()
+                entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == id, CrosswordData.day == target_date).with_for_update().first()
                 if entry:
                     entry.status, entry.solve_time = 'complete', puzzle_statistics['calcs']['secondsSpentSolving']
                 else:
