@@ -64,11 +64,11 @@ export default function RegistrationManager({setShowRegistrationManager, message
                         </div>
                         <div className="form-group text-start mb-4">
                             <label>Password:</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
+                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" minLength="8" placeholder="Password"/>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label>Password:</label>
-                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-control" placeholder="Verify Password"/>
+                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-control" minLength="8" placeholder="Verify Password"/>
                         </div>
                         <div className="row">
                             <p className="text-center text-danger">

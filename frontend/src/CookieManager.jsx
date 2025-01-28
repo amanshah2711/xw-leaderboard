@@ -5,6 +5,8 @@ import CookieDeletion from "./CookieDeletion";
 export default function CookieManager() {
     const [cookie, setCookie] = useState("");
     const [showDeletePage, setShowDeletePage] = useState(false);
+    const [isReady, setIsReady] = useState(false);
+
     useEffect (() => {
         const fillBoard = async () => {
           try {
@@ -16,7 +18,7 @@ export default function CookieManager() {
               });
             const result = await response.json();
             setShowDeletePage(result);
-    
+            setIsReady(true);
           } catch (error) {
               console.error('Checking if you have a connected NYT account failed.', error);
           }
@@ -26,7 +28,7 @@ export default function CookieManager() {
 
     return (
         <div>
-            {showDeletePage ? <CookieDeletion showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/> :  <CookieUpload cookie={cookie} setCookie={setCookie} showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/>}
+            {isReady && (showDeletePage ? <CookieDeletion showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/> :  <CookieUpload cookie={cookie} setCookie={setCookie} showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/>)}
         </div>
     )
 }
