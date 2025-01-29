@@ -48,7 +48,7 @@ export default function Rankings({day}) {
                     <div key={index}>
                         <div className="d-flex align-items-center justify-content-center">
                             <h6 className="mb-0 me-2 lead">{index+1}.</h6>
-                            <p className="mb-0 lead">{entry.username}</p>  
+                            <p className="mb-0 me-4 lead">{entry.username}</p>  
                             <p className="mb-0 ms-auto lead">{formatTime(entry.solve_time)}</p>
                         </div>
                         <hr className="col-md-12"></hr>
