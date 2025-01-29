@@ -8,14 +8,14 @@ export default defineConfig({
     host:'0.0.0.0',
     port:5173,
     allowedHosts: ['xwleaderboard.amanshah2711.me'],
-   proxy: {
-     '/api': {
+   proxy: process.env.NODE_ENV === 'development' ? {
+     '/api':  {
           target: 'http://xwleaderboardbackend:5000',
           changeOrigin: true,
           secure: false,      
           ws: false,
       }
- }
+ } : {}
 
   },
 });
