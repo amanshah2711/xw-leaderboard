@@ -8,6 +8,8 @@ export default defineConfig({
     host:'0.0.0.0',
     port:5173,
     allowedHosts: ['xwleaderboard.amanshah2711.me'],
+    hmr: false,
+    ws: false,
 //    proxy: {
 //      '/api': {
 //           target: 'http://xwleaderboardbackend:5000',
