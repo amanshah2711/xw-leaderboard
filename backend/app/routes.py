@@ -90,6 +90,8 @@ def sync(date_string):
 
     incompleted_ids = group_ids - completed_ids
     incompleted_data = [User.query.filter_by(id=id).first().username for id in incompleted_ids]
+
+    completed_data.sort(key=lambda d:d['solve_time'])
     
     return jsonify({"complete" : completed_data, "incomplete" : incompleted_data}), 200
 
