@@ -17,7 +17,7 @@ export default function NavBar(){
         }
     };  
   return (
-    <div className="row justify-content-md-center d-flex">
+    <div className="row justify-content-md-center d-flex mb-2">
       <div className="col-md-10">
           <nav className="navbar navbar-expand-lg navbar-light d-flex">
               <div className="navbar-brand">XWLeaderboard</div>

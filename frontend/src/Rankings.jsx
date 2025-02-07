@@ -40,7 +40,7 @@ export default function Rankings({day}) {
       }, [day]);
      
     return (
-        <div className="row d-flex justify-content-center align-items-center mb-4 mt-5">
+        <div className="row d-flex justify-content-center align-items-center mb-4 mt-4">
             <div className="col-4"></div>
             <div className="col-4">
                 <ul className="list-group list-group-flush">
