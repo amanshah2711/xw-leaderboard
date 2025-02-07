@@ -83,10 +83,10 @@ def sync(date_string):
                 else:
                     entry = CrosswordData(user_id=id, day=target_date, solve_time=puzzle_statistics['calcs']['secondsSpentSolving'], status='complete')
                     db.session.add(entry)
+                    db.session.commit()
                 completed_data.append({'username' : user.username, 'solve_time': entry.solve_time})
                 completed_ids.add(id)
 
-    db.session.commit()
 
     incompleted_ids = group_ids - completed_ids
     incompleted_data = [User.query.filter_by(id=id).first().username for id in incompleted_ids]
