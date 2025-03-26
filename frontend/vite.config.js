@@ -10,7 +10,7 @@ export default defineConfig({
     allowedHosts: ['xwleaderboard.amanshah2711.me'],
     proxy: process.env.NODE_ENV === 'development' ? {
       '/api': {
-        target: 'http://xwleaderboardbackend:5000',
+        target: 'http://xwleaderboardbackend:5001',
         changeOrigin: true,
         secure: false,
         ws: false
