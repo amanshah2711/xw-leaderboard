@@ -37,17 +37,17 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
             <div className="row">
                 <div className="col-4"></div>
                 <div className="col-4">
-                    <form>
+                    <form autoComplete="on">
                         <div className="form-group text-start mb-4">
                             <label>Email address:</label>
-                            <input value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
+                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label>Password:</label>
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
                         </div>
                         <div className="row">
                             <p className="text-center text-secondary">
