@@ -39,14 +39,14 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
                 <div className="col-4">
                     <form autoComplete="on">
                         <div className="form-group text-start mb-4">
-                            <label>Email address:</label>
+                            <label for="email">Email address:</label>
                             <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
-                            <label>Password:</label>
+                            <label for="password">Password:</label>
                             <input type="password" name="password" id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
                         </div>
                         <div className="row">
