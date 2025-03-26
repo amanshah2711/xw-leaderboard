@@ -13,7 +13,8 @@ export default defineConfig({
         target: 'http://xwleaderboardbackend:5000',
         changeOrigin: true,
         secure: false,
+        ws: false
       }
-    } : {},
+    } : {ws: false},
   },
 });
