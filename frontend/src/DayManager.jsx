@@ -5,12 +5,22 @@ export default function DayManager({day, setDay}) {
 
     const onClick = (shift) => {
         return (() => {
-            const updatedDate = new Date(day);
-            const currentDate = new Date().setHours(0,0,0,0);
-            updatedDate.setDate(updatedDate.getDate() + shift);
-            updatedDate.setHours(0,0,0,0);
-            if (updatedDate <= currentDate && updatedDate >= nyDateOnly) {
-                setDay(updatedDate);
+            const inspectedDate = new Date(day);
+            const currentDate = new Date();
+            const upperDate = new Date();
+            inspectedDate.setDate(inspectedDate.getDate() + shift);
+            inspectedDate.setHours(0,0,0,0);
+            if (currentDate.getDay() == 0 || currentDate.getDay() == 6) {
+                if (currentDate.getHours() >= 18) {
+                    upperDate.setDate(upperDate.getDate() + 1);
+                } 
+            } else {
+                if (currentDate.getHours() >= 22) {
+                    upperDate.setDate(upperDate.getDate() + 1);
+                }             
+            }
+            if (inspectedDate <= upperDate && inspectedDate >= nyDateOnly) {
+                setDay(inspectedDate);
             }
         }
     )
