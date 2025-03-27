@@ -2,6 +2,8 @@
 from . import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint
+import os
 
 
 class User(UserMixin, db.Model):
@@ -29,6 +31,8 @@ class CrosswordData(db.Model):
     day = db.Column(db.Date, nullable=False)
     solve_time = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), nullable=False, default='incomplete')
+    
+    __table_args__ = (UniqueConstraint("user_id", "day", name="unique_user_day"),)
 
 class Friends(db.Model):
     friend_one = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)

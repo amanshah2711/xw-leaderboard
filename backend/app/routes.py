@@ -3,10 +3,11 @@ from flask import request, jsonify, redirect
 from flask_login import login_user, login_required, current_user, logout_user
 import namer
 from app import app
-from .models import User, db, Friends, CrosswordData
+from .models import User, db, Friends, CrosswordData 
 from datetime import datetime
 from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check
 import os
+from sqlalchemy.dialects.postgresql import insert
 
 generate_link = lambda : namer.generate(category="scientists", suffix_length=4)
 invite_formatter = lambda code : "/api/invite/" + code
@@ -77,16 +78,18 @@ def sync(date_string):
         if user.encrypted_nyt_cookie: # Make sure to check and validate cookies
             puzzle_statistics = get_puzzle_statistics(date_string, decrypt_cookie(user.encrypted_nyt_cookie))
             if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
-                entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == id, CrosswordData.day == target_date).with_for_update().first()
+                entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == id, CrosswordData.day == target_date).first()
+                solve_time = puzzle_statistics['calcs']['secondsSpentSolving']
                 if entry:
-                    entry.status, entry.solve_time = 'complete', puzzle_statistics['calcs']['secondsSpentSolving']
+                    entry.status, entry.solve_time = 'complete', solve_time
                 else:
-                    entry = CrosswordData(user_id=id, day=target_date, solve_time=puzzle_statistics['calcs']['secondsSpentSolving'], status='complete')
-                    db.session.add(entry)
-                    db.session.commit()
-                completed_data.append({'username' : user.username, 'solve_time': entry.solve_time})
+                    stmt = insert(CrosswordData).values(user_id=id, day=target_date, solve_time=solve_time, status='complete').on_conflict_do_nothing(index_elements=['user_id', 'day'])
+                    db.session.execute(stmt)
+
+                completed_data.append({'username' : user.username, 'solve_time': solve_time})
                 completed_ids.add(id)
 
+    db.session.commit()
 
     incompleted_ids = group_ids - completed_ids
     incompleted_data = [User.query.filter_by(id=id).first().username for id in incompleted_ids]
