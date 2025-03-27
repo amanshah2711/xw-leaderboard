@@ -3,6 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 import os
+import sys
 
 from app import db
 from alembic import context
@@ -14,6 +15,7 @@ config.set_main_option('sqlalchemy.url', os.getenv('DATABASE_URL'))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
+print("Config file being used:", config.config_file_name)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
