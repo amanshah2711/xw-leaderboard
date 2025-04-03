@@ -49,8 +49,8 @@ export default function LinkManager() {
     return (
         <div className="flex align-items-center">
             <div className="mb-2">
-                <button className="btn btn-primary me-4 mb-2" onClick={handleCopyLink}>Copy Invite Link</button>
-                <button className="btn btn-primary me-4 mb-2" onClick={handleClick}>Reset Invite Link</button>
+                <button className="btn btn-primary mx-2 mb-2" onClick={handleCopyLink}>Copy Invite Link</button>
+                <button className="btn btn-primary mx-2 mb-2" onClick={handleClick}>Reset Invite Link</button>
             </div>
             <div className="row">
                 <div className="col-2"></div>
