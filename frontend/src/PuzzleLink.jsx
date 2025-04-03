@@ -23,7 +23,7 @@ export default function PuzzleLink({day}) {
     }, [])
     return (
         <div className="row">
-            <a href={link} className="link-secondary">Link to Puzzle</a>
+            <a href={link} target="_blank" className="link-secondary">Link to Puzzle</a>
         </div>
     );
 }
