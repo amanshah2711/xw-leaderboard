@@ -17,7 +17,10 @@ formatted_date = now_in_new_york.strftime('%Y-%m-%d')
 # NYT API Base (figured out by monitoring network traffic)
 nyt_url = 'https://www.nytimes.com/svc/crosswords/v6'
 metadata_endpoint = 'puzzle/daily'
-data_endpoint = 'game'
+data_endpoint = 'crosswords/game/daily'
+
+# NYT Puzzle Link (Add date in YYYY/MM/DD to end of link; note different with puzzle endpoint)
+nyt_puzzle_url = lambda date_string: f'https://www.nytimes.com/{data_endpoint}/{date_string}'
 
 # NYT Puzzle Endpoint (Add date in YYYY-MM-DD.json to the end)
 nyt_puzzle_metadata = lambda date_string : f'{nyt_url}/{metadata_endpoint}/{date_string}.json'

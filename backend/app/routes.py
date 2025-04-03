@@ -5,7 +5,7 @@ import namer
 from app import app
 from .models import User, db, Friends, CrosswordData 
 from datetime import datetime
-from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check
+from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check, nyt_puzzle_url
 import os
 from sqlalchemy.dialects.postgresql import insert
 
@@ -63,6 +63,7 @@ def check_login():
 @app.route('/api/sync/<date_string>', methods=['GET'])
 @login_required
 def sync(date_string):
+    print(date_string)
     target_date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
     friends = db.session.query(Friends).filter(Friends.friend_one == current_user.id).all()
@@ -103,6 +104,13 @@ def sync(date_string):
 def get_invite_link():
     if request.method == 'GET':
         return jsonify({"invite" : invite_formatter(current_user.invite_link)}) 
+
+@app.route('/api/puzzle_link/<date_string>', methods=['GET'])
+@login_required
+def get_puzzle_link(date_string):
+    if request.method == 'GET':
+        target_date = datetime.strptime(date_string, '%Y-%m-%d').strftime('%Y/%m/%d')
+        return jsonify({'puzzle_link' : nyt_puzzle_url(target_date)})
 
 @app.route('/api/invite/<invite_token>', methods=['GET'])
 def process_invite(invite_token):
