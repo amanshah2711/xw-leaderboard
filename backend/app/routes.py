@@ -63,7 +63,6 @@ def check_login():
 @app.route('/api/sync/<date_string>', methods=['GET'])
 @login_required
 def sync(date_string):
-    print(date_string)
     target_date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
     friends = db.session.query(Friends).filter(Friends.friend_one == current_user.id).all()

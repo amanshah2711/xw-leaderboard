@@ -49,8 +49,8 @@ export default function RegistrationManager({setShowRegistrationManager, message
                 <div className="col-4">
                     <form>
                         <div className="form-group text-start mb-4">
-                            <label>Email address:</label>
-                            <input value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
+                            <label htmlFor="email">Email Address:</label>
+                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
                         </div>
                         <div className="row">
                             <div></div>
@@ -67,8 +67,8 @@ export default function RegistrationManager({setShowRegistrationManager, message
                             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" minLength="8" placeholder="Password"/>
                         </div>
                         <div className="form-group text-start mb-4">
-                            <label>Password:</label>
-                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-control" minLength="8" placeholder="Verify Password"/>
+                            <label htmlFor="password">Password:</label>
+                            <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
                         </div>
                         <div className="row">
                             <p className="text-center text-danger">
