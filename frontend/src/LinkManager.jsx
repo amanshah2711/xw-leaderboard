@@ -56,7 +56,7 @@ export default function LinkManager() {
                 <div className="col-2"></div>
                 <div className="col-8">
                     <p className="fw-bold" htmlFor="inviteLink">Your Invite Link:</p>
-                    <p className="font-monospace">{link}</p>
+                    <p className="font-monospace overflow-auto text-wrap">{link}</p>
                 </div>
                 <div className="col-2"></div>
             </div>
