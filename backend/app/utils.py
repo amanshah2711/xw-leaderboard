@@ -15,18 +15,24 @@ now_in_new_york = datetime.now(new_york_tz)
 formatted_date = now_in_new_york.strftime('%Y-%m-%d')
 
 # NYT API Base (figured out by monitoring network traffic)
-nyt_url = 'https://www.nytimes.com/svc/crosswords/v6'
+nyt_base_url = 'https://www.nytimes.com'
+
+# backend endpoints
+backend_endpoint = 'svc/crosswords/v6'
 metadata_endpoint = 'puzzle/daily'
-data_endpoint = 'crosswords/game/daily'
+data_endpoint = 'game'
+
+#frontend endpoints
+puzzle_endpoint = 'crosswords/game/daily'
 
 # NYT Puzzle Link (Add date in YYYY/MM/DD to end of link; note different with puzzle endpoint)
-nyt_puzzle_url = lambda date_string: f'https://www.nytimes.com/{data_endpoint}/{date_string}'
+nyt_puzzle_url = lambda date_string: f'{nyt_base_url}/{puzzle_endpoint}/{date_string}'
 
 # NYT Puzzle Endpoint (Add date in YYYY-MM-DD.json to the end)
-nyt_puzzle_metadata = lambda date_string : f'{nyt_url}/{metadata_endpoint}/{date_string}.json'
+nyt_puzzle_metadata = lambda date_string : f'{nyt_base_url}/{backend_endpoint}/{metadata_endpoint}/{date_string}.json'
 
 # NYT Puzzle Data (Add gameid.json to the end)
-nyt_puzzle_solve_data = lambda game_id : f'{nyt_url}/{data_endpoint}/{game_id}.json'
+nyt_puzzle_solve_data = lambda game_id : f'{nyt_base_url}/{backend_endpoint}/{data_endpoint}/{game_id}.json'
 
 create_header = lambda cookie : {'Cookie' : cookie, 'User-Agent' : 'XWLeaderboard/1.0'}
 
