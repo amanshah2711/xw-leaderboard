@@ -20,7 +20,7 @@ export default function PuzzleLink({day}) {
             }
         }
         fetchData()
-    }, [])
+    }, [day])
     return (
         <div className="row">
             <a href={link} target="_blank" className="link-secondary">Link to Puzzle</a>
