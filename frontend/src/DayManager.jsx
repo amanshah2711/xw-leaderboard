@@ -34,12 +34,14 @@ export default function DayManager({day, setDay}) {
     });
     return (
             <div className="row justify-content-center align-items-center mb-2">
-                <div className="col-6">
-                    <div className="d-flex justify-content-between align-items-center">
-                        <button type="button" className="btn border-0" onClick={onClick(-1)}>←</button>
-                        <p className="h2 mb-0">{formatter.format(day)}</p>
-                        <button type="button" className="btn border-0" onClick={onClick(1)}>→</button>
-                    </div>
+                <div className="col-4 d-flex justify-content-end">
+                    <button type="button" className="btn border-0" onClick={onClick(-1)}>←</button>
+                </div>
+                <div className="col-4 d-flex justify-content-center align-items-center">
+                    <p className="h2 mb-0">{formatter.format(day)}</p>
+                </div>
+                <div className="col-4 d-flex justify-content-start">
+                    <button type="button" className="btn border-0" onClick={onClick(1)}>→</button>
                 </div>
             </div>
     )
