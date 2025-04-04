@@ -18,6 +18,12 @@ invite_formatter = lambda code : "/api/invite/" + code
 frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 
+def user_exists(form, field):
+    email = field.data
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        raise ValidationError("This email is already being used with an account")
+
 def password_strength(form, field):
     password = field.data
     if len(password) < 8:
@@ -30,7 +36,7 @@ def password_strength(form, field):
         raise ValidationError("Password must contain at least one special character (-!@#$%^&*()_+)")
     
 class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(), Length(min=6, max=50)])
+    email = StringField('Email', validators=[InputRequired(), Length(min=6, max=50), user_exists])
     password = PasswordField('Password', validators=[
         InputRequired(), 
         password_strength
@@ -47,7 +53,6 @@ def register():
         invite_link = generate_link()
         if User.query.filter_by(email=email).first():
             return jsonify({"success": False, "message": "Email is already registered"}), 200
-
         user = User(email=email, username=username, invite_link=invite_link)
         user.set_password(password)
 
@@ -106,9 +111,14 @@ def change_password():
 def change_email():
     data = request.get_json()  
     email = data.get('email')
-    current_user.email = email 
-    db.session.commit()
-    return jsonify({'success': True}), 200
+    user = User.query.filter_by(email=email).first()
+    print("hi", "bye")
+    if not user:
+        current_user.email = email 
+        db.session.commit()
+        return jsonify({'success': True}), 200
+    else:
+        return jsonify({'success': True, 'message': 'The submitted email is already in use'}), 200
 
 @app.route('/api/change_username', methods=['POST'])
 @login_required

@@ -15,6 +15,7 @@ export default function RegistrationManager({setShowRegistrationManager, message
         e.preventDefault();
         if (password == confirmPassword) {
             const data = await submitData({email: email, password: password, username: username});
+            console.log(data);
             if (data.success) {
                 setShowRegistrationManager(false);
             }
@@ -34,25 +35,25 @@ export default function RegistrationManager({setShowRegistrationManager, message
                     <form>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="email">Email Address:</label>
-                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
+                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email" required/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label>Username:</label>
-                            <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" placeholder="Username"/>
+                            <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" className="form-control" placeholder="Username" required/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="password">Password:</label>
-                            <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password" required/>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="password">Password:</label>
-                            <input type="password" name="password" id="password" autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" id="password" autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password" required/>
                         </div>
                         <div className="row">
                             <p className="text-center text-danger">

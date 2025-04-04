@@ -31,14 +31,14 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
                     <form autoComplete="on" method="post">
                         <div className="form-group text-start mb-4">
                             <label htmlFor="email">Email Address:</label>
-                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email"/>
+                            <input type="email" name="email" id="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email" required/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="password">Password:</label>
-                            <input type="password" name="password" id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password" required/>
                         </div>
                         <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                         <button type="submit" className="btn btn-secondary" onClick={() => {setShowRegistrationManager(true);setMessage("")}}>Register</button>
