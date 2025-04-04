@@ -112,7 +112,6 @@ def change_email():
     data = request.get_json()  
     email = data.get('email')
     user = User.query.filter_by(email=email).first()
-    print("hi", "bye")
     if not user:
         current_user.email = email 
         db.session.commit()

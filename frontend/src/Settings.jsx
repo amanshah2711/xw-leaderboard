@@ -8,8 +8,8 @@ export default function Settings() {
     return (
         <div className="container-fluid justify-content-center align-items-center">
             <CookieManager/>
-            <ChangeEmail/>
             <ChangeUsername/>
+            <ChangeEmail/>
             <ChangePassword/>
             <DeleteAccount/>
         </div>
