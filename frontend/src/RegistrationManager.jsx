@@ -34,15 +34,15 @@ export default function RegistrationManager({setShowRegistrationManager, message
                 <div className="col-4">
                     <form>
                         <div className="form-group text-start mb-4">
-                            <label htmlFor="email">Email Address:</label>
-                            <input type="email" name="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email" required/>
+                            <label>Display Name:</label>
+                            <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" className="form-control" placeholder="Display Name" required/>
                         </div>
                         <div className="row">
                             <div></div>
                         </div>
                         <div className="form-group text-start mb-4">
-                            <label>Display Name:</label>
-                            <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" className="form-control" placeholder="Display Name" required/>
+                            <label htmlFor="email">Email Address:</label>
+                            <input type="email" name="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email" required/>
                         </div>
                         <div className="row">
                             <div></div>
