@@ -6,6 +6,9 @@ from app import app
 from .models import User, db, Friends, CrosswordData 
 from datetime import datetime
 from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check, nyt_puzzle_url
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import InputRequired, Length, EqualTo, Regexp, ValidationError
 import os
 from sqlalchemy.dialects.postgresql import insert
 
@@ -13,25 +16,53 @@ generate_link = lambda : namer.generate(category="scientists", suffix_length=4)
 invite_formatter = lambda code : "/api/invite/" + code
 frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
+
+def password_strength(form, field):
+    password = field.data
+    if len(password) < 8:
+        raise ValidationError("Password must be at least 8 characters long")
+    if not any(char.isupper() for char in password):
+        raise ValidationError("Password must contain at least one uppercase letter")
+    if not any(char.isdigit() for char in password):
+        raise ValidationError("Password must contain at least one digit")
+    if not any(char in "!@#$%^&*()_+" for char in password):
+        raise ValidationError("Password must contain at least one special character (!@#$%^&*()_+)")
+    
+class RegistrationForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Length(min=6, max=50)])
+    password = PasswordField('Password', validators=[
+        InputRequired(), 
+        password_strength
+    ])
+    
 @app.route('/api/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    email = data.get('email')
-    username = data.get('username')
-    password = data.get('password')
-    invite_link = generate_link()
-    if User.query.filter_by(email=email).first():
-        return jsonify({"success": False, "message": "Email is already registered"}), 200
+    form = RegistrationForm()
+    if form.validate():
+        data = request.get_json()
+        email = data.get('email')
+        username = data.get('username')
+        password = data.get('password')
+        invite_link = generate_link()
+        if User.query.filter_by(email=email).first():
+            return jsonify({"success": False, "message": "Email is already registered"}), 200
 
-    user = User(email=email, username=username, invite_link=invite_link)
-    user.set_password(password)
+        user = User(email=email, username=username, invite_link=invite_link)
+        user.set_password(password)
 
-    db.session.add(user)
-    db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
-    login_user(user)
+        login_user(user)
 
-    return jsonify({"success": True, "message": "Log In To Your Account"}), 200
+        return jsonify({"success": True, "message": "Log In To Your Account"}), 200
+    else:
+        message = ''
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error in {field}: {error}")
+                message += f'Error in {field}: {error}' + '\n \n'
+        return jsonify({"success": False, "message": message}), 200
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -44,7 +75,7 @@ def login():
         if user.encrypted_nyt_cookie and cookie_check(decrypt_cookie(user.encrypted_nyt_cookie)):
             return jsonify({"logged_in": True, "redirect" : "/leaderboard"}), 200
         else:
-            return jsonify({"logged_in": True, "redirect" : "/cookies"}), 200
+            return jsonify({"logged_in": True, "redirect" : "/settings", 'message' : 'Your cookie has expired or become invalid. Please submit it again to use our service.'}), 200
     return jsonify({"logged_in" : False, "message":"Invalid username or password"}), 200 
 
 @app.route('/api/logout')
@@ -60,6 +91,28 @@ def check_login():
     else:
         return jsonify({"logged_in": False})
     
+@app.route('/api/change_password', methods=['POST'])
+@login_required
+def change_password():
+    pass
+
+@app.route('/api/change_username', methods=['POST'])
+@login_required
+def change_username():
+    data = request.get_json()  
+    new_username = data.get('username')
+    current_user.username = new_username
+    db.session.commit()
+    return jsonify({'success': True}), 200
+
+@app.route('/api/reset_password')
+def reset_password():
+    pass
+
+@app.route('/api/delete_account')
+def delete_account():
+    pass
+
 @app.route('/api/sync/<date_string>', methods=['GET'])
 @login_required
 def sync(date_string):
@@ -102,7 +155,7 @@ def sync(date_string):
 @login_required
 def get_invite_link():
     if request.method == 'GET':
-        return jsonify({"invite" : invite_formatter(current_user.invite_link)}) 
+        return jsonify({'success' : True, "invite" : invite_formatter(current_user.invite_link)}) 
 
 @app.route('/api/puzzle_link/<date_string>', methods=['GET'])
 @login_required
@@ -132,12 +185,11 @@ def rankings():
     return jsonify({"message": "You have successfully added a friend!"}), 200
 
 @app.route('/api/reset_invite', methods=['POST'])
+@login_required
 def reset_invite_link():
-    user = User.query.get(current_user.id)
-    if user:
-        user.invite_link = generate_link()
-        db.session.commit()
-        return jsonify({"invite" : invite_formatter(user.invite_link)}), 200
+    current_user.invite_link = generate_link()
+    db.session.commit()
+    return jsonify({'success' : True, "invite" : invite_formatter(current_user.invite_link)}), 200
 
 @app.route('/api/remove_friend', methods=['POST'])
 @login_required
@@ -154,18 +206,23 @@ def store_cookie(): #Add validation verificatoin and updating of cookies
         encrypted_cookie = encrypt_cookie(cookie)
         current_user.encrypted_nyt_cookie = encrypted_cookie
         db.session.commit()
-        return jsonify({"message": "Your cookie has been safely stored"}), 200
+        return jsonify({'success': True, "message": "Your cookie has been safely stored"}), 200
     else:
-        return jsonify({"message": "The submitted cookie was invalid"}), 400
+        return jsonify({'success': False, "message": "The submitted cookie was invalid"}), 400
 
 @app.route('/api/remove_cookie', methods=['POST'])
 @login_required
 def remove_cookie(): 
     current_user.encrypted_nyt_cookie = None
     db.session.commit()
-    return jsonify({"message": "Your cookie has been deleted and your NYT account disconnected"}), 200
+    return jsonify({"success": True, "message": "Your cookie has been deleted and your NYT account disconnected"}), 200
 
 @app.route('/api/valid_cookie', methods=['GET'])
 @login_required
 def valid_cookie(): 
-    return jsonify(bool(current_user.encrypted_nyt_cookie)), 200
+    if current_user.encrypted_nyt_cookie:
+        return jsonify({'success' : True, 'message' : '', 'is_valid' : cookie_check(decrypt_cookie(current_user.encrypted_nyt_cookie))}), 200
+    else:
+        return jsonify({'success' : True, 'message' : '', 'is_valid' : False}), 200
+ 
+

@@ -52,7 +52,7 @@ def get_puzzle_statistics(date_string, cookie):
         else:
             print('Error while fetching puzzle times')
  
-fernet = Fernet(os.getenv('NYT_COOKIE_ENCRYPTION_KEY'))
+fernet = Fernet(os.getenv('NYT_COOKIE_ENCRYPTION_KEY', "sdfsdfdsfsdfs"))
 
 def encrypt_cookie(cookie):
     return fernet.encrypt(cookie.encode()).decode()
