@@ -13,13 +13,13 @@ export default function ChangeEmail() {
         }
     }
     return (
-        <div className="row justify-content-center">
+        <div className="row justify-content-center m-4">
             <div></div>
             <div className="col-4">
                 <form>
                     <div className="form-group text-start mb-4">
                         <label>Change Email:</label>
-                        <input name="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="New email"/>
+                        <input name="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New email"/>
                     </div>
                     <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                 </form>

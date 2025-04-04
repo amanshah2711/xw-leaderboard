@@ -18,7 +18,7 @@ export default function CookieUpload({setValidCookie}) {
         <div className="container">
             <div className="row">
                 <div className="col-4"></div>
-                <div className="col-4">
+                <div className="col-4 text-center">
                     Instructions to get your cookie <a href="https://xwstats.com/link" target="_blank">here</a>
                     <form>
                         <div className="form-group text-start mb-4">

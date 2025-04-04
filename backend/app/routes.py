@@ -9,7 +9,7 @@ from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import generate_csrf
 from wtforms import StringField, PasswordField
-from wtforms.validators import InputRequired, Length, EqualTo, Regexp, ValidationError
+from wtforms.validators import InputRequired, Length, Regexp, ValidationError
 import os
 from sqlalchemy.dialects.postgresql import insert
 
@@ -26,8 +26,8 @@ def password_strength(form, field):
         raise ValidationError("Password must contain at least one uppercase letter")
     if not any(char.isdigit() for char in password):
         raise ValidationError("Password must contain at least one digit")
-    if not any(char in "!@#$%^&*()_+" for char in password):
-        raise ValidationError("Password must contain at least one special character (!@#$%^&*()_+)")
+    if not any(char in "-!@#$%^&*()_+" for char in password):
+        raise ValidationError("Password must contain at least one special character (-!@#$%^&*()_+)")
     
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Length(min=6, max=50)])
@@ -95,7 +95,11 @@ def check_login():
 @app.route('/api/change_password', methods=['POST'])
 @login_required
 def change_password():
-    pass
+    data = request.get_json()  
+    password = data.get('password')
+    current_user.set_password(password) 
+    db.session.commit()
+    return jsonify({'success': True}), 200
 
 @app.route('/api/change_email', methods=['POST'])
 @login_required
@@ -119,9 +123,15 @@ def change_username():
 def reset_password():
     pass
 
-@app.route('/api/delete_account')
+@app.route('/api/delete_account', methods=['POST'])
+@login_required
 def delete_account():
-    pass
+    user = current_user
+    CrosswordData.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    Friends.query.filter((Friends.friend_one == user.id) | (Friends.friend_two == user.id)).delete(synchronize_session=False)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'success': True}), 200
 
 @app.route('/api/sync/<date_string>', methods=['GET'])
 @login_required

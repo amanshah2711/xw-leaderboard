@@ -15,7 +15,7 @@ export default function CookieManager() {
     if (error) return <p>Error: {error}</p>;
  
     return (
-        <div className="m-2">
+        <div className="m-4">
             {!loading && (validCookie ? <CookieDeletion setValidCookie={setValidCookie}/> :  <CookieUpload setValidCookie={setValidCookie}/>)}
         </div>
     )

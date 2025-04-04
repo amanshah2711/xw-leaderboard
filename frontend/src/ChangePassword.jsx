@@ -1,14 +1,15 @@
+
 import { useState } from "react";
 import { useSubmit } from "./services/useSubmit";
 
-export default function ChangeUsername() {
-    const [username, setUsername] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change_username");
+export default function ChangePassword() {
+    const [password, setPassword] = useState("");
+    const { submitData, loading, error } = useSubmit("/api/change_password");
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await submitData({username: username});
+        const data = await submitData({password: password});
         if (data.success) {
-            setUsername("");
+            setPassword("");
         }
     }
     return (
@@ -17,8 +18,8 @@ export default function ChangeUsername() {
             <div className="col-4">
                 <form>
                     <div className="form-group text-start mb-4">
-                        <label>Change Username:</label>
-                        <input name="username" value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Username"/>
+                        <label htmlFor="password">Password:</label>
+                        <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password"/>
                     </div>
                     <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                 </form>
