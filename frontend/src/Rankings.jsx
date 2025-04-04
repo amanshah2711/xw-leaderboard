@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useFetch } from "./services/useFetch";
 
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);  // 1 hour = 3600 seconds
@@ -19,26 +20,9 @@ function formatDate(date) {
   }
 
 export default function Rankings({day}) {
-    const [data, setData] = useState({"complete":[], "incomplete":[]});
-    useEffect (() => {
-        const fillBoard = async () => {
-          try {
-              const response = await fetch(`${"/api/sync/"}${formatDate(day)}`, {
-                  method: 'GET',
-                  headers: {
-                  'Content-Type': 'application/json',
-                  },
-              });
-            const stuff = await response.json();
-            setData(stuff);
-    
-          } catch (error) {
-              console.error('Loading data to the leadboard failed:', error);
-          }
-      }; 
-      fillBoard()
-      }, [day]);
-     
+    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatDate(day)}`);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
     return (
         <div className="row d-flex justify-content-center align-items-center mb-4 mt-4">
             <div className="col-4"></div>

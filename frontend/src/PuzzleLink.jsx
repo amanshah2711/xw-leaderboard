@@ -1,29 +1,12 @@
 import { useEffect, useState } from "react";
+import { useFetch } from "./services/useFetch";
 
 export default function PuzzleLink({day}) {
-    const [link, setLink] = useState("");
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${"/api/puzzle_link/"}${day.toISOString().substring(0,10)}`, {
-                    method: 'GET',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                });
-            
-                const data = await response.json();
-                setLink(data.puzzle_link);
-
-            } catch (error) {
-                console.error('Puzzle Link Retrieval Failed', error);
-            }
-        }
-        fetchData()
-    }, [day])
+    day.setHours(0,0,0,0); // hack for dealing with daylight savings
+    const { data, loading, error } = useFetch(`${"/api/puzzle_link/"}${day.toISOString().substring(0,10)}`);
     return (
         <div className="row">
-            <a href={link} target="_blank" className="link-secondary">Link to Puzzle</a>
+            {!loading && <a href={data.puzzle_link} target="_blank" className="link-secondary">Link to Puzzle</a>}
         </div>
     );
 }

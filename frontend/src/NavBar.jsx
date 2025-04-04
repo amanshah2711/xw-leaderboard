@@ -22,7 +22,7 @@ export default function NavBar(){
           <nav className="navbar navbar-expand-lg navbar-light d-flex">
               <div className="navbar-brand">XWLeaderboard</div>
               {location.pathname != '/' && <Link to='/leaderboard' className="nav-item ms-auto btn">Leaderboard</Link>}
-              {location.pathname != '/' && <Link to='/cookies' className="nav-item btn">Settings</Link>}
+              {location.pathname != '/' && <Link to='/settings' className="nav-item btn">Settings</Link>}
               {location.pathname != '/' && <Link className="nav-item btn" id="logout" onClick={() => handleClick("logout")}>Logout</Link>}
           </nav>
       </div>

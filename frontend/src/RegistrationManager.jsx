@@ -1,43 +1,27 @@
 
-import { useNavigate } from "react-router-dom";
 import icon from "./icon.jpg";
 import { useState } from "react";
+import { useSubmit } from "./services/useSubmit";
 
 export default function RegistrationManager({setShowRegistrationManager, message, setMessage}) {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate();
-    const handleRegistration = async (e) => {
+
+    const { submitData, loading, error } = useSubmit("/api/register");
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password != confirmPassword) {
-            setMessage("Passwords don't match!")
+        if (password == confirmPassword) {
+            const data = await submitData({email: email, password: password, username: username});
+            if (data.success) {
+                setShowRegistrationManager(false);
+            }
+            setMessage(data.message);
         } else {
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({email: email, password: password, username: username}),
-                });
-            
-                const data = await response.json();
-            
-                if (response.ok) {
-                    if (data.success) {
-                        setShowRegistrationManager(false);
-                    }
-                    setMessage(data.message);
-                } else {
-                    console.log("failure");
-                }
-            }
-            catch (error) {
-                console.error('Submitting Registration Information Failed:', error);
-            }
-    }
+            setMessage("Passwords don't match");
+        }
     };  
     return (
         <div>
@@ -75,7 +59,7 @@ export default function RegistrationManager({setShowRegistrationManager, message
                                 {message} 
                             </p>
                         </div>
-                        <button type="submit" className="btn btn-primary me-4" onClick={handleRegistration}>Submit</button>
+                        <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                         <button type="submit" className="btn btn-secondary" onClick={() => {setShowRegistrationManager(false); setMessage("")}}>Back</button>
                     </form>
                 </div>

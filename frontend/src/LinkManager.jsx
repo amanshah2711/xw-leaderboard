@@ -1,7 +1,25 @@
 import { useEffect, useState } from "react";
-
+import { useFetch } from "./services/useFetch";
+import { useSubmit } from "./services/useSubmit";
 export default function LinkManager() {
     const [link, setLink] = useState("");
+    const { submitData, loading1, error1 } = useSubmit("/api/reset_invite");
+    const { data, loading, error } = useFetch("/api/get_invite");
+    useEffect(()=>{
+        if (data && data.success) {
+            setLink(`${window.location.origin}${data.invite}`);
+        }
+    }, [data])
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = await submitData({});
+        if (data.success) {
+            setLink(`${window.location.origin}${data.invite}`);
+        }
+        
+    };  
     const handleCopyLink = () => {
         navigator.clipboard.writeText(link).then(() => {
             alert("Happy Sharing With Your Friends!");
@@ -9,48 +27,11 @@ export default function LinkManager() {
             console.error("Failed to copy link: ", err);
         });
     }
-    const handleClick = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('/api/reset_invite', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            });
-        
-            const data = await response.json();
-            setLink(`${window.location.origin}${data.invite}`);
-
-        } catch (error) {
-            console.error('Error while resetting your invite link', error);
-        }
-    };  
-
-    useEffect (() => {
-        const checkLogin = async () => {
-        try {
-            const response = await fetch('/api/get_invite', {
-                method: 'GET',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            });
-        
-            const data = await response.json();
-            setLink(`${window.location.origin}${data.invite}`);
-
-        } catch (error) {
-            console.error('Invite Link Retrieval Failed', error);
-        }
-    }; 
-    checkLogin()
-    }, []);
     return (
         <div className="flex align-items-center">
             <div className="mb-2">
                 <button className="btn btn-primary mx-2 mb-2" onClick={handleCopyLink}>Copy Invite Link</button>
-                <button className="btn btn-primary mx-2 mb-2" onClick={handleClick}>Reset Invite Link</button>
+                <button className="btn btn-primary mx-2 mb-2" onClick={handleSubmit}>Reset Invite Link</button>
             </div>
             <div className="row">
                 <div className="col-2"></div>

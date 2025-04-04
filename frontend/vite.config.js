@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    hmr: false,
     allowedHosts: ['xwleaderboard.amanshah2711.me'],
     proxy: process.env.NODE_ENV === 'development' ? {
       '/api': {

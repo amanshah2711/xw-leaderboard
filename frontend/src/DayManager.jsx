@@ -1,6 +1,6 @@
 
 export default function DayManager({day, setDay}) {
-    const nyDate = new Date('1993-11-21T00:00:00-05:00'); // 00:00 represents midnight in New York (UTC-5)
+    const nyDate = new Date('1993-11-21T00:00:00-04:00'); // 00:00 represents midnight in New York (UTC-5)
     const nyDateOnly = new Date(nyDate.setHours(0, 0, 0, 0));
 
     const onClick = (shift) => {

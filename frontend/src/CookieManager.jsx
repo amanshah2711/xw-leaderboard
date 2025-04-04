@@ -1,34 +1,22 @@
 import { useState, useEffect} from "react";
 import CookieUpload from "./CookieUpload";
 import CookieDeletion from "./CookieDeletion";
-
+import { useFetch } from "./services/useFetch";
 export default function CookieManager() {
-    const [cookie, setCookie] = useState("");
-    const [showDeletePage, setShowDeletePage] = useState(false);
-    const [isReady, setIsReady] = useState(false);
+    const { data, loading, error } = useFetch("/api/valid_cookie");
+    const [validCookie, setValidCookie] = useState(false);
 
-    useEffect (() => {
-        const fillBoard = async () => {
-          try {
-              const response = await fetch("/api/valid_cookie", {
-                  method: 'GET',
-                  headers: {
-                  'Content-Type': 'application/json',
-                  },
-              });
-            const result = await response.json();
-            setShowDeletePage(result);
-            setIsReady(true);
-          } catch (error) {
-              console.error('Checking if you have a connected NYT account failed.', error);
-          }
-      }; 
-      fillBoard()
-      }, []);
-
+   useEffect(() => {
+        if (data && data.success) {
+            setValidCookie(data.is_valid);
+        }
+    }, [data]); 
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+ 
     return (
-        <div>
-            {isReady && (showDeletePage ? <CookieDeletion showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/> :  <CookieUpload cookie={cookie} setCookie={setCookie} showDeletePage={showDeletePage} setShowDeletePage={setShowDeletePage}/>)}
+        <div className="m-4">
+            {!loading && (validCookie ? <CookieDeletion setValidCookie={setValidCookie}/> :  <CookieUpload setValidCookie={setValidCookie}/>)}
         </div>
     )
 }

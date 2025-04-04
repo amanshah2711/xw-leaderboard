@@ -1,20 +1,14 @@
+import { useSubmit } from "./services/useSubmit";
 
-export default function CookieDeletion({showDeletePage, setShowDeletePage}) {
+export default function CookieDeletion({setValidCookie}) {
+    const { submitData, loading, error } = useSubmit("/api/remove_cookie");
+
     const handleSubmit = async (e) => {
-        try {
-            e.preventDefault();
-            const response = await fetch('/api/remove_cookie', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            });
-            const data = await response.json();
-            setShowDeletePage(false);
-        } catch (error) {
-            console.error("Storing cookie failed", error);
-        }
+        e.preventDefault();
+        const data = await submitData({});
+        setValidCookie(!data.success);
     };  
+
     return (
         <div className="row justify-content-center">
             <div className="col-2"></div>
