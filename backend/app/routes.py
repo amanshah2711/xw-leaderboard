@@ -21,7 +21,7 @@ frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 def user_exists(form, field):
     email = field.data
     user = User.query.filter_by(email=email).first()
-    if not user:
+    if user:
         raise ValidationError("This email is already being used with an account")
 
 def password_strength(form, field):
