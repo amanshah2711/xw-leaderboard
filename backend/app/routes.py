@@ -97,6 +97,15 @@ def check_login():
 def change_password():
     pass
 
+@app.route('/api/change_email', methods=['POST'])
+@login_required
+def change_email():
+    data = request.get_json()  
+    email = data.get('email')
+    current_user.email = email 
+    db.session.commit()
+    return jsonify({'success': True}), 200
+
 @app.route('/api/change_username', methods=['POST'])
 @login_required
 def change_username():
@@ -226,7 +235,7 @@ def valid_cookie():
     else:
         return jsonify({'success' : True, 'message' : '', 'is_valid' : False}), 200
 
-@app.route("/api/csrf-token", methods=["GET"])
+@app.route("/api/csrf_token", methods=["GET"])
 def get_csrf():
     response = make_response(jsonify({"csrf_token": generate_csrf()}))
     return response
