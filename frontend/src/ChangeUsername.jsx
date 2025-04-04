@@ -18,7 +18,7 @@ export default function ChangeUsername() {
                 <form>
                     <div className="form-group text-start mb-4">
                         <label>Change Username:</label>
-                        <input name="username" value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Username"/>
+                        <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Username"/>
                     </div>
                     <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                 </form>
