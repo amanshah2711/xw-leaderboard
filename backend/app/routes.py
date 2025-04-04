@@ -1,5 +1,5 @@
 
-from flask import request, jsonify, redirect
+from flask import request, jsonify, redirect, make_response
 from flask_login import login_user, login_required, current_user, logout_user
 import namer
 from app import app
@@ -7,6 +7,7 @@ from .models import User, db, Friends, CrosswordData
 from datetime import datetime
 from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check, nyt_puzzle_url
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import generate_csrf
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length, EqualTo, Regexp, ValidationError
 import os
@@ -224,5 +225,10 @@ def valid_cookie():
         return jsonify({'success' : True, 'message' : '', 'is_valid' : cookie_check(decrypt_cookie(current_user.encrypted_nyt_cookie))}), 200
     else:
         return jsonify({'success' : True, 'message' : '', 'is_valid' : False}), 200
+
+@app.route("/api/csrf-token", methods=["GET"])
+def get_csrf():
+    response = make_response(jsonify({"csrf_token": generate_csrf()}))
+    return response
  
 

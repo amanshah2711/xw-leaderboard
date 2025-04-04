@@ -1,10 +1,13 @@
 
 import { useState } from "react";
 
+import useCsrf from "./useCSRF";
+
 export function useSubmit(url, method = "POST") {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
   
+    const csrfToken = useCsrf();
     const submitData = async (body) => {
       setLoading(true);
       setError(null);
@@ -12,7 +15,10 @@ export function useSubmit(url, method = "POST") {
       try {
         const response = await fetch(url, {
           method,
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+           },
           body: JSON.stringify(body),
         });
   
