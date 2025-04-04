@@ -19,7 +19,7 @@ export default function ChangePassword() {
                 <form>
                     <div className="form-group text-start mb-4">
                         <label htmlFor="password">Password:</label>
-                        <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" autoCorrect="off" className="form-control" placeholder="Password"/>
+                        <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" className="form-control" placeholder="Password"/>
                     </div>
                     <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
                 </form>
