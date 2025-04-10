@@ -16,17 +16,19 @@ export default function ChangeEmail() {
         setMessage(data.message);
     }
     return (
-        <div className="row justify-content-center m-4">
-            <div></div>
-            <div className="col-4">
-                <form>
-                    <div className="form-group text-start mb-4">
-                        <label>Change Email:</label>
-                        <input name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New email"/>
-                    </div>
-                    <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
-                    <p className="text-secondary m-2">{message}</p>
-                </form>
+        <div className="container">
+            <div className="row justify-content-center m-4">
+                <div></div>
+                <div className="col-4">
+                    <form>
+                        <div className="form-group text-start mb-4">
+                            <label>Change Email:</label>
+                            <input name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New email"/>
+                        </div>
+                        <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        <p className="text-secondary m-2">{message}</p>
+                    </form>
+                </div>
             </div>
         </div>
     );

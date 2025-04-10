@@ -12,17 +12,19 @@ export default function ChangeUsername() {
         }
     }
     return (
-        <div className="row justify-content-center m-4">
-            <div></div>
-            <div className="col-4">
-                <form>
-                    <div className="form-group text-start mb-4">
-                        <label>Change Display Name:</label>
-                        <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Display Name"/>
+            <div className="container">
+                <div className="row justify-content-center m-4">
+                    <div></div>
+                    <div className="col-4">
+                        <form>
+                            <div className="form-group text-start mb-4">
+                                <label>Change Display Name:</label>
+                                <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Display Name"/>
+                            </div>
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        </form>
                     </div>
-                    <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
-                </form>
+                </div>
             </div>
-        </div>
     );
 }

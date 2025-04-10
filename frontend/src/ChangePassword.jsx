@@ -13,16 +13,18 @@ export default function ChangePassword() {
         }
     }
     return (
-        <div className="row justify-content-center m-4">
-            <div></div>
-            <div className="col-4">
-                <form>
-                    <div className="form-group text-start mb-4">
-                        <label htmlFor="password">Password:</label>
-                        <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" className="form-control" placeholder="Password"/>
-                    </div>
-                    <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
-                </form>
+        <div className="container">
+            <div className="row justify-content-center m-4">
+                <div></div>
+                <div className="col-4">
+                    <form>
+                        <div className="form-group text-start mb-4">
+                            <label htmlFor="password">Change Password:</label>
+                            <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" className="form-control" placeholder="Password"/>
+                        </div>
+                        <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     );

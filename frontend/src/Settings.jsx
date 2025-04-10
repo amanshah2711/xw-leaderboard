@@ -6,7 +6,7 @@ import DeleteAccount from "./DeleteAccount";
 
 export default function Settings() {
     return (
-        <div className="container-fluid justify-content-center align-items-center">
+        <div className="container-fluid d-flex flex-column justify-content-center align-items-center">
             <CookieManager/>
             <ChangeUsername/>
             <ChangeEmail/>

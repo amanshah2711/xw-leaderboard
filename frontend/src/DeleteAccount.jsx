@@ -15,11 +15,13 @@ export default function DeleteAccount() {
         }
     }
     return (
-        <div className="row justify-content-center m-4">
-            <div className="col-4">
-                <button type="button" className="btn btn-danger" onClick={handleSubmit} disabled={loading}>
-                    Delete Account
-                </button>
+        <div className="container">
+            <div className="row justify-content-center">
+                <div className="col-4">
+                    <button type="button" className="btn btn-danger" onClick={handleSubmit} disabled={loading}>
+                        Delete Account
+                    </button>
+                </div>
             </div>
         </div>
     )
