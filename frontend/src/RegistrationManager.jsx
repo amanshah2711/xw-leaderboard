@@ -60,8 +60,8 @@ export default function RegistrationManager({setShowRegistrationManager, message
                                 {message} 
                             </p>
                         </div>
-                        <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
-                        <button type="submit" className="btn btn-secondary" onClick={() => {setShowRegistrationManager(false); setMessage("")}}>Back</button>
+                        <button type="submit" className="btn btn-primary mx-2 mb-2" onClick={handleSubmit}>Submit</button>
+                        <button type="submit" className="btn btn-secondary mx-2 mb-2" onClick={() => {setShowRegistrationManager(false); setMessage("")}}>Back</button>
                     </form>
                 </div>
             <div className="col-4"></div>
