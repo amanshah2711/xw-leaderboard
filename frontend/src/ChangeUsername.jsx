@@ -13,7 +13,7 @@ export default function ChangeUsername() {
     }
     return (
             <div className="container">
-                <div className="row justify-content-center m-4">
+                <div className="row justify-content-center m-2">
                     <div></div>
                     <div className="col-4">
                         <form>

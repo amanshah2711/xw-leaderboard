@@ -27,11 +27,11 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
             </div>
             <div className="row mb-2">
                 <div className="col-4"></div>
-                <div className="col-4">
+                <div className="col-4 d-flex justify-content-center">
                     <form autoComplete="on" method="post">
                         <div className="form-group text-start mb-4">
                             <label htmlFor="email">Email Address:</label>
-                            <input type="email" name="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Enter email" required/>
+                            <input type="email" name="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Email" required/>
                         </div>
                         <div className="row">
                             <div></div>
