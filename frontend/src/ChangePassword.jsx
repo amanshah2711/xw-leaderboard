@@ -22,7 +22,9 @@ export default function ChangePassword() {
                             <label htmlFor="password">Change Password:</label>
                             <input type="password" name="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} inputMode="text" className="form-control" placeholder="Password"/>
                         </div>
-                        <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        <div className="d-flex justify=content-center">
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>
