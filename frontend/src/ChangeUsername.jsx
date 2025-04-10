@@ -21,7 +21,7 @@ export default function ChangeUsername() {
                                 <label>Change Display Name:</label>
                                 <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Display Name"/>
                             </div>
-                            <div className="d-flex justify=content-center">
+                            <div className="d-flex justify-content-center">
                                 <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                             </div>
                         </form>

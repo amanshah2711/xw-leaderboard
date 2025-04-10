@@ -25,7 +25,7 @@ export default function ChangeEmail() {
                             <label>Change Email:</label>
                             <input name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New email"/>
                         </div>
-                        <div className="d-flex justify=content-center">
+                        <div className="d-flex justify-content-center">
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                         </div>
                         <p className="text-secondary m-2">{message}</p>
