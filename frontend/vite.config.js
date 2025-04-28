@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 5200,
     hmr: false,
+    ws: false,
     allowedHosts: ['xwleaderboard.amanshah2711.me'],
     proxy: process.env.NODE_ENV === 'development' ? {
       '/api': {
@@ -16,6 +17,7 @@ export default defineConfig({
         secure: false,
         ws: false
       }
-    } : {ws: false},
+    } : {ws: false, hmr: false},
   },
 });
+console.log('VITE CONFIG LOADED LOPEZ');

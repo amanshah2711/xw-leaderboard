@@ -11,5 +11,5 @@ COPY . .
 
 EXPOSE 5173
 
-CMD [ "yarn", "dev" ]
+CMD [ "yarn", "build" ]
 
