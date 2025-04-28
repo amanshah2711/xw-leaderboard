@@ -20,4 +20,3 @@ export default defineConfig({
     } : {ws: false, hmr: false},
   },
 });
-console.log('VITE CONFIG LOADED LOPEZ');
