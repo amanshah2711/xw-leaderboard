@@ -33,6 +33,8 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
                             <label htmlFor="email">Email Address:</label>
                             <input type="email" id="user-text-field" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Email" required/>
                         </div>
+                        <div className="row">
+                        </div>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="password">Password:</label>
                             <input type="password" id="password-text-field" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Password" required/>
