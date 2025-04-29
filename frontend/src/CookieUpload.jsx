@@ -15,21 +15,23 @@ export default function CookieUpload({setValidCookie}) {
         }
     };  
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-4"></div>
-                <div className="col-4 text-center">
+            <div className="row justify-content-center m-2">
+                <p>
                     Instructions to get your cookie <a href="https://xwstats.com/link" target="_blank">here</a>
+                </p>
+
+                <div className="col-4">
                     <form>
                         <div className="form-group text-start mb-4">
                             <label>NYT-S Cookie:</label>
                             <input name="cookie" value={cookie} onChange={(e) => setCookie(e.target.value)} className="form-control" placeholder="NYT-S"/>
                         </div>
-                        <button type="submit" className="btn btn-primary me-4" onClick={handleSubmit}>Submit</button>
+
+                        <div className="d-flex justify-content-center">
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        </div>
                     </form>
                 </div>
-                <div className="col-4"></div>
             </div>
-        </div>
     )
 }
