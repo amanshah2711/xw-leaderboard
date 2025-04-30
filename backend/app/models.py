@@ -31,6 +31,7 @@ class CrosswordData(db.Model):
     day = db.Column(db.Date, nullable=False)
     solve_time = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), nullable=False, default='incomplete')
+    kind = db.Column(db.String(20), nullable=False, default='daily')
     
     __table_args__ = (UniqueConstraint("user_id", "day", name="unique_user_day"),)
 

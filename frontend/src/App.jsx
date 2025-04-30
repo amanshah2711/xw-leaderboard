@@ -21,7 +21,8 @@ function App() {
       <NavBar/>
       <Routes>
         <Route path="/" element={<HomePage/>}/>
-        <Route path="/leaderboard" element={<Leaderboard/>}/>
+        <Route path="/daily" element={<Leaderboard kind={"daily"}/>}/>
+        <Route path="/mini" element={<Leaderboard kind={"mini"}/>}/>
         <Route path="/settings" element={<Settings/>}/>
         <Route path="/cookies" element={<CookieManager/>}/>
       </Routes>

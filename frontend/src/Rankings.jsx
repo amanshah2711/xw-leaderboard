@@ -19,8 +19,8 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
   }
 
-export default function Rankings({day}) {
-    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatDate(day)}`);
+export default function Rankings({day, kind}) {
+    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatDate(day)}${'/'}${kind}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
