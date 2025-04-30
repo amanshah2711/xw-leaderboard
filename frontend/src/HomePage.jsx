@@ -12,7 +12,7 @@ export default function HomePage() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (data.logged_in) {
-        navigate('/leaderboard');
+        navigate('/daily');
     } 
     return (
         <div>
