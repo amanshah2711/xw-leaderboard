@@ -115,7 +115,7 @@ def change_email():
     if not user:
         current_user.email = email 
         db.session.commit()
-        return jsonify({'success': True}), 200
+        return jsonify({'success': True, 'message': 'Your email has been successfully changed to ' + email}), 200
     else:
         return jsonify({'success': True, 'message': 'The submitted email is already in use'}), 200
 
@@ -162,8 +162,6 @@ def sync(date_string, kind):
             if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
                 entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == id, CrosswordData.day == target_date, CrosswordData.kind == kind).first()
                 solve_time = puzzle_statistics['calcs']['secondsSpentSolving']
-                print(solve_time, "JORGE")
-                print("here")
                 if entry:
                     entry.status, entry.solve_time = 'complete', solve_time
                 else:
