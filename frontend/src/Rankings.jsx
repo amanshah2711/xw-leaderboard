@@ -5,22 +5,22 @@ function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);  // 1 hour = 3600 seconds
     const minutes = Math.floor((seconds % 3600) / 60);  // Remaining minutes
     const secs = seconds % 60;  // Remaining seconds
-  
+
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     } else {
-      return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
     }
-  }
-function formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+}
+const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/New_York",
+      year: "numeric", 
+      month: "2-digit",   
+      day: "2-digit",  
+    });
 
 export default function Rankings({day, kind}) {
-    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatDate(day)}${'/'}${kind}`);
+    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatter.format(day)}${'/'}${kind}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
