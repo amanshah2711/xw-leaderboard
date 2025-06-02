@@ -6,8 +6,6 @@ import PuzzleLink from "./PuzzleLink";
 
 export default function Leaderboard ({kind}) {
   const [day, setDay] = useState(new Date());
-  console.log(day);
-  console.log(day.toISOString());
 
   return (
       <div className="container-fluid">
