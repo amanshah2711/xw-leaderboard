@@ -3,16 +3,16 @@ import { useSubmit } from "./services/useSubmit";
 
 export default function CookieUpload({setValidCookie}) {
     const [cookie, setCookie] = useState("");
+    const [message, setMessage] = useState("");
     const { submitData, loading, error } = useSubmit("/api/store_cookie");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({nytCookie: cookie});
+        setMessage(data.message);
         if (data.success) {
             setValidCookie(data.success);
-        } else {
-            console.log(data.message);
-        }
+        } 
     };  
     return (
             <div className="row justify-content-center m-2">
@@ -31,6 +31,9 @@ export default function CookieUpload({setValidCookie}) {
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                         </div>
                     </form>
+                </div>
+                <div className="row">
+                    <p className="text-center text-secondary">{message}</p>
                 </div>
             </div>
     )

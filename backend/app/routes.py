@@ -82,7 +82,7 @@ def login():
             return jsonify({"logged_in": True, "redirect" : "/daily"}), 200
         else:
             return jsonify({"logged_in": True, "redirect" : "/settings", 'message' : 'Your cookie has expired or become invalid. Please submit it again to use our service.'}), 200
-    return jsonify({"logged_in" : False, "message":"Invalid username or password"}), 200 
+    return jsonify({"logged_in" : False, "message":"Invalid email or password"}), 200 
 
 @app.route('/api/logout')
 @login_required
@@ -104,7 +104,7 @@ def change_password():
     password = data.get('password')
     current_user.set_password(password) 
     db.session.commit()
-    return jsonify({'success': True}), 200
+    return jsonify({'success': True, 'message': 'Your password has been successfully changed'}), 200
 
 @app.route('/api/change_email', methods=['POST'])
 @login_required
@@ -117,7 +117,11 @@ def change_email():
         db.session.commit()
         return jsonify({'success': True, 'message': 'Your email has been successfully changed to ' + email}), 200
     else:
-        return jsonify({'success': True, 'message': 'The submitted email is already in use'}), 200
+        if current_user.email == email:
+            message = 'Your account already uses this email'
+        else:
+            message = 'This email is in use with a different account'
+        return jsonify({'success': True, 'message': message}), 200
 
 @app.route('/api/change_username', methods=['POST'])
 @login_required
@@ -126,7 +130,7 @@ def change_username():
     new_username = data.get('username')
     current_user.username = new_username
     db.session.commit()
-    return jsonify({'success': True}), 200
+    return jsonify({'success': True, 'message' : 'Your username has been successfully changed. Visit the leaderboard to see it!'}), 200
 
 @app.route('/api/reset_password')
 def reset_password():
@@ -231,14 +235,14 @@ def remove_friend():
 @login_required
 def store_cookie(): #Add validation verificatoin and updating of cookies
     data = request.get_json()  
-    cookie = data.get('nytCookie')
+    cookie = 'NYT-S=' + data.get('nytCookie')
     if cookie_check(cookie):
         encrypted_cookie = encrypt_cookie(cookie)
         current_user.encrypted_nyt_cookie = encrypted_cookie
         db.session.commit()
         return jsonify({'success': True, "message": "Your cookie has been safely stored"}), 200
     else:
-        return jsonify({'success': False, "message": "The submitted cookie was invalid"}), 400
+        return jsonify({'success': False, "message": "The submitted cookie was invalid"}), 200 
 
 @app.route('/api/remove_cookie', methods=['POST'])
 @login_required

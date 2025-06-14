@@ -9,11 +9,10 @@ export default function ChangeEmail() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({email: email});
-        console.log(data);
+        setMessage(data.message);
         if (data.success) {
             setEmail("");
         }
-        setMessage(data.message);
     }
     return (
         <div className="container">
@@ -27,9 +26,11 @@ export default function ChangeEmail() {
                         <div className="d-flex justify-content-center">
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                         </div>
-                        <p className="text-secondary m-2">{message}</p>
                     </form>
                 </div>
+            </div>
+            <div className="row">
+                <p className="text-center text-secondary">{message}</p>
             </div>
         </div>
     );

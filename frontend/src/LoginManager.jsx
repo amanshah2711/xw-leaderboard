@@ -44,8 +44,8 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
 			<div className="col-4"></div>
                 </div>
 	    	<div className="row">
-	    	<p className="text-center text-secondary">{message}</p>
-	    </div>
+                <p className="text-center text-secondary">{message}</p>
+            </div>
 	    	
         </div>
     )
