@@ -1,11 +1,11 @@
 
-from flask import request, jsonify, redirect, make_response
+from flask import request, jsonify, redirect, make_response, url_for
 from flask_login import login_user, login_required, current_user, logout_user
 import namer
 from app import app
 from .models import User, db, Friends, CrosswordData 
 from datetime import datetime
-from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check, nyt_puzzle_url, nyt_mini_puzzle_url
+from .utils import encrypt_cookie, decrypt_cookie, get_puzzle_statistics, cookie_check, nyt_puzzle_url, nyt_mini_puzzle_url, verify_token, generate_token
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import generate_csrf
 from wtforms import StringField, PasswordField
@@ -132,9 +132,30 @@ def change_username():
     db.session.commit()
     return jsonify({'success': True, 'message' : 'Your username has been successfully changed. Visit the leaderboard to see it!'}), 200
 
-@app.route('/api/reset_password')
-def reset_password():
-    pass
+@app.route('/api/request_reset_password', methods=['POST'])
+def request_reset_password():
+    data = request.get_json()
+    email = data.get('email')
+    token = generate_token(email, 'password-reset-salt')
+    reset_url = frontend_url + '/reset-password/' + token
+    
+    return jsonify({'success': True, 'message': 'Succesfully sent link to your email, if it exists.', 'debug': reset_url}), 200
+
+@app.route('/api/reset_password/<token>', methods=['POST'])
+def reset_password(token):
+    email = verify_token(token=token, salt='password-reset-salt', expiration=3600)
+    if not email:
+        return jsonify({'success' : False, 'message':'Invalid token'}), 200
+    
+    data = request.get_json()
+    user = User.query.filter_by(email=email).first()
+    new_password = data.get('password')
+    user.set_password(new_password)
+    db.session.commit()
+    return jsonify({'success' : False, 'message' : 'Password successfully changed'}), 200
+
+
+    
 
 @app.route('/api/delete_account', methods=['POST'])
 @login_required

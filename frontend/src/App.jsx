@@ -8,6 +8,8 @@ import CookieManager from './CookieManager';
 import HomePage from './HomePage';
 import Settings from './Settings';
 import { useFetch } from './services/useFetch';
+import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 
 function App() {
     const { data, loading, error } = useFetch("/api/csrf_token");
@@ -25,6 +27,8 @@ function App() {
         <Route path="/mini" element={<Leaderboard kind={"mini"}/>}/>
         <Route path="/settings" element={<Settings/>}/>
         <Route path="/cookies" element={<CookieManager/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/reset-password/:token" element={<ResetPassword/>}/>
       </Routes>
     </Router>
   )

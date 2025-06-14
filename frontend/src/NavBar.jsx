@@ -1,9 +1,11 @@
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate, useMatch} from "react-router-dom";
 
 export default function NavBar(){
     const location = useLocation();
     const navigate = useNavigate();
     const isActive = (path) => location.pathname === path;
+    const isResetPassword = useMatch('/reset-password/:token')
+    const appear = location.pathname != '/' && location.pathname != '/forgot-password' && !isResetPassword;
 
     const handleClick = async (id) => {
         try {
@@ -22,11 +24,11 @@ export default function NavBar(){
     <div className="row justify-content-md-center d-flex mb-2">
       <div className="col-md-10">
           <nav className="navbar navbar-expand-lg navbar-light d-flex">
-              <div className="navbar-brand">XWLeaderboard</div>
-              {location.pathname != '/' && <Link to='/mini' className={`nav-item ms-auto btn ${isActive('/mini') ? 'active' : ''}`}>Mini</Link>}
-              {location.pathname != '/' && <Link to='/daily' className={`nav-item btn ${isActive('/daily') ? 'active' : ''}`}>Daily</Link>}
-              {location.pathname != '/' && <Link to='/settings' className={`nav-item btn ${isActive('/settings') ? 'active' : ''}`}>Settings</Link>}
-              {location.pathname != '/' && <Link className="nav-item btn" id="logout" onClick={() => handleClick("logout")}>Logout</Link>}
+              <div className="navbar-brand"><Link to="/" className='text-body text-decoration-none'>XWLeaderboard</Link></div>
+              {appear && <Link to='/mini' className={`nav-item ms-auto btn ${isActive('/mini') ? 'active' : ''}`}>Mini</Link>}
+              {appear && <Link to='/daily' className={`nav-item btn ${isActive('/daily') ? 'active' : ''}`}>Daily</Link>}
+              {appear && <Link to='/settings' className={`nav-item btn ${isActive('/settings') ? 'active' : ''}`}>Settings</Link>}
+              {appear && <Link className="nav-item btn" id="logout" onClick={() => handleClick("logout")}>Logout</Link>}
           </nav>
       </div>
     <hr className="col-md-11"></hr>

@@ -4,6 +4,8 @@ import os
 from cryptography.fernet import Fernet
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from . import timed_serializer
+from itsdangerous import SignatureExpired, BadSignature
 
 # Define the New York time zone
 new_york_tz = ZoneInfo("America/New_York")
@@ -75,6 +77,19 @@ def decrypt_cookie(encrypted_cookie):
 
 def cookie_check(cookie): #NYT response returns a json with key "message" and value "Forbidden" for invalid cookies
     return bool(get_puzzle_info(formatted_date, cookie))
+
+def generate_token(email, salt):
+    return timed_serializer.dumps(email, salt)
+
+def verify_token(token, salt, expiration = 3600):
+    try:
+        data = timed_serializer.loads(token, salt=salt, max_age=expiration)
+        return data 
+    except SignatureExpired:
+        return None  # Token expired
+    except BadSignature:
+        return None  # Token tampered
+
 
 
 

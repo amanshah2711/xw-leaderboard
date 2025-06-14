@@ -6,7 +6,9 @@ from flask_login import LoginManager
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
+from itsdangerous import URLSafeTimedSerializer
 import os
+
 
 
 app = Flask(__name__)
@@ -15,6 +17,7 @@ CORS(app, origins=cors_allowed_origins)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL','sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'default-secret-key')
+timed_serializer = URLSafeTimedSerializer(os.getenv('FLASK_SECRET_KEY', 'default-secret-key'))
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
