@@ -5,7 +5,7 @@ import { useSubmit } from "./services/useSubmit";
 export default function ChangeEmail() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change_email");
+    const { submitData, loading, error } = useSubmit("/api/change-email");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({email: email});

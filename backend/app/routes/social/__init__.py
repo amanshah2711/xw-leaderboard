@@ -6,7 +6,7 @@ from app.utils.social import invite_formatter, generate_link
 import datetime
 
 
-@app.route('/api/get_invite', methods=['GET'])
+@app.route('/api/get-invite', methods=['GET'])
 @login_required
 def get_invite_link():
     if request.method == 'GET':
@@ -29,14 +29,14 @@ def process_invite(invite_token):
     else:
         return "Invite invalid", 404
 
-@app.route('/api/reset_invite', methods=['POST'])
+@app.route('/api/reset-invite', methods=['POST'])
 @login_required
 def reset_invite_link():
     current_user.invite_link = generate_link()
     db.session.commit()
     return jsonify({'success' : True, "invite" : invite_formatter(current_user.invite_link)}), 200
 
-@app.route('/api/remove_friend', methods=['POST'])
+@app.route('/api/remove-friend', methods=['POST'])
 @login_required
 def remove_friend():
     if request.method == 'POST':

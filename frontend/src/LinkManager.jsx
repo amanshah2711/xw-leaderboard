@@ -3,8 +3,8 @@ import { useFetch } from "./services/useFetch";
 import { useSubmit } from "./services/useSubmit";
 export default function LinkManager() {
     const [link, setLink] = useState("");
-    const { submitData, loading1, error1 } = useSubmit("/api/reset_invite");
-    const { data, loading, error } = useFetch("/api/get_invite");
+    const { submitData, loading1, error1 } = useSubmit("/api/reset-invite");
+    const { data, loading, error } = useFetch("/api/get-invite");
     useEffect(()=>{
         if (data && data.success) {
             setLink(`${window.location.origin}${data.invite}`);

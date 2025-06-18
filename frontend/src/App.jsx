@@ -12,7 +12,7 @@ import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 
 function App() {
-    const { data, loading, error } = useFetch("/api/csrf_token");
+    const { data, loading, error } = useFetch("/api/csrf-token");
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (data.csrf_token) {

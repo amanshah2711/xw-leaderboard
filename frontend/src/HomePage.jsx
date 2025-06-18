@@ -8,7 +8,7 @@ export default function HomePage() {
     const [showRegistrationManager, setShowRegistrationManager] = useState(false);
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-    const { data, loading, error } = useFetch("/api/check_login");
+    const { data, loading, error } = useFetch("/api/check-login");
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (data.logged_in) {

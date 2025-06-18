@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function DeleteAccount() {
     const navigate = useNavigate();
-    const { submitData, loading, error } = useSubmit("/api/delete_account");
+    const { submitData, loading, error } = useSubmit("/api/delete-account");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const confirmed = window.confirm("Are you sure you want to delete your account? This cannot be undone.");

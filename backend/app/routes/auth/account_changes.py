@@ -8,7 +8,7 @@ from app.utils.encryption import generate_token, verify_token
 from app.utils import frontend_url
 from app.forms.auth import PasswordChangeForm
 
-@app.route('/api/change_password', methods=['POST'])
+@app.route('/api/change-password', methods=['POST'])
 @login_required
 def change_password():
     form = PasswordChangeForm()
@@ -26,7 +26,7 @@ def change_password():
                 message += f'Error in {field}: {error}' + '\n \n'
         return jsonify({"success": False, "message": message}), 200
 
-@app.route('/api/change_email', methods=['POST'])
+@app.route('/api/change-email', methods=['POST'])
 @login_required
 def change_email():
     data = request.get_json()  
@@ -43,7 +43,7 @@ def change_email():
             message = 'This email is in use with a different account'
         return jsonify({'success': True, 'message': message}), 200
 
-@app.route('/api/change_username', methods=['POST'])
+@app.route('/api/change-username', methods=['POST'])
 @login_required
 def change_username():
     data = request.get_json()  
@@ -52,7 +52,7 @@ def change_username():
     db.session.commit()
     return jsonify({'success': True, 'message' : 'Your username has been successfully changed. Visit the leaderboard to see it!'}), 200
 
-@app.route('/api/request_reset_password', methods=['POST'])
+@app.route('/api/request-reset-password', methods=['POST'])
 def request_reset_password():
     data = request.get_json()
     email = data.get('email')
@@ -63,7 +63,7 @@ def request_reset_password():
     
     return jsonify({'success': True, 'message': 'Succesfully sent link to your email, if it exists.', 'debug': reset_url}), 200
 
-@app.route('/api/reset_password/<token>', methods=['POST'])
+@app.route('/api/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     email = verify_token(token=token, salt='password-reset-salt', expiration=3600)
     if not email:
@@ -85,7 +85,7 @@ def reset_password(token):
                 message += f'Error in {field}: {error}' + '\n \n'
         return jsonify({"success": False, "message": message}), 200
 
-@app.route('/api/delete_account', methods=['POST'])
+@app.route('/api/delete-account', methods=['POST'])
 @login_required
 def delete_account():
     user = current_user

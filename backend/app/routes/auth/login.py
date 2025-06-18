@@ -26,7 +26,7 @@ def logout():
     logout_user()
     return jsonify({"success" : False})
 
-@app.route('/api/check_login')
+@app.route('/api/check-login')
 def check_login():
     if current_user.is_authenticated:
         return jsonify({"logged_in": True})

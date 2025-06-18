@@ -4,7 +4,7 @@ import { useSubmit } from "./services/useSubmit";
 export default function CookieUpload({setValidCookie}) {
     const [cookie, setCookie] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/store_cookie");
+    const { submitData, loading, error } = useSubmit("/api/store-cookie");
 
     const handleSubmit = async (e) => {
         e.preventDefault();

@@ -46,7 +46,7 @@ def sync(date_string, kind):
     
     return jsonify({"complete" : completed_data, "incomplete" : incompleted_data}), 200
 
-@app.route('/api/puzzle_link/<date_string>/<kind>', methods=['GET'])
+@app.route('/api/puzzle-link/<date_string>/<kind>', methods=['GET'])
 @login_required
 def get_puzzle_link(date_string, kind):
     puzzle_url = nyt_puzzle_url if kind == 'daily' else nyt_mini_puzzle_url
@@ -54,7 +54,7 @@ def get_puzzle_link(date_string, kind):
         target_date = datetime.strptime(date_string, '%Y-%m-%d').strftime('%Y/%m/%d')
         return jsonify({'puzzle_link' : puzzle_url(target_date)})
 
-@app.route('/api/store_cookie', methods=['POST'])
+@app.route('/api/store-cookie', methods=['POST'])
 @login_required
 def store_cookie(): #Add validation verificatoin and updating of cookies
     data = request.get_json()  
@@ -67,14 +67,14 @@ def store_cookie(): #Add validation verificatoin and updating of cookies
     else:
         return jsonify({'success': False, "message": "The submitted cookie was invalid"}), 200 
 
-@app.route('/api/remove_cookie', methods=['POST'])
+@app.route('/api/remove-cookie', methods=['POST'])
 @login_required
 def remove_cookie(): 
     current_user.encrypted_nyt_cookie = None
     db.session.commit()
     return jsonify({"success": True, "message": "Your cookie has been deleted and your NYT account disconnected"}), 200
 
-@app.route('/api/valid_cookie', methods=['GET'])
+@app.route('/api/valid-cookie', methods=['GET'])
 @login_required
 def valid_cookie(): 
     if current_user.encrypted_nyt_cookie:

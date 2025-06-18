@@ -3,7 +3,7 @@ import CookieUpload from "./CookieUpload";
 import CookieDeletion from "./CookieDeletion";
 import { useFetch } from "./services/useFetch";
 export default function CookieManager() {
-    const { data, loading, error } = useFetch("/api/valid_cookie");
+    const { data, loading, error } = useFetch("/api/valid-cookie");
     const [validCookie, setValidCookie] = useState(false);
 
    useEffect(() => {

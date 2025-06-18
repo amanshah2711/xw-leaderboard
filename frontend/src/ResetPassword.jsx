@@ -9,7 +9,7 @@ export default function ResetPassword() {
     const [message, setMessage] = useState("");
 
     const { token } = useParams();
-    const { submitData, loading, error } = useSubmit(`/api/reset_password/${token}`);
+    const { submitData, loading, error } = useSubmit(`/api/reset-password/${token}`);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

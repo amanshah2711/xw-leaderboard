@@ -5,7 +5,7 @@ import { useSubmit } from "./services/useSubmit";
 export default function ChangePassword() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change_password");
+    const { submitData, loading, error } = useSubmit("/api/change-password");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({password: password});

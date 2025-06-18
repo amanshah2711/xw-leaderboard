@@ -4,7 +4,7 @@ import { useSubmit } from "./services/useSubmit";
 export default function ChangeUsername() {
     const [username, setUsername] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change_username");
+    const { submitData, loading, error } = useSubmit("/api/change-username");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({username: username});

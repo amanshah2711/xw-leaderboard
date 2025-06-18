@@ -1,7 +1,7 @@
 import { useSubmit } from "./services/useSubmit";
 
 export default function CookieDeletion({setValidCookie}) {
-    const { submitData, loading, error } = useSubmit("/api/remove_cookie");
+    const { submitData, loading, error } = useSubmit("/api/remove-cookie");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
