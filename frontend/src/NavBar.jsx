@@ -24,7 +24,7 @@ export default function NavBar(){
     <div className="row justify-content-md-center d-flex mb-2">
       <div className="col-md-10">
           <nav className="navbar navbar-expand-lg navbar-light d-flex">
-              <div className="navbar-brand"><Link to="/" className='text-body text-decoration-none'>XWLeaderboard</Link></div>
+              <div className="navbar-brand"><Link to="/" className='navbar-brand text-decoration-none'>XWLeaderboard</Link></div>
               {appear && <Link to='/mini' className={`nav-item ms-auto btn ${isActive('/mini') ? 'active' : ''}`}>Mini</Link>}
               {appear && <Link to='/daily' className={`nav-item btn ${isActive('/daily') ? 'active' : ''}`}>Daily</Link>}
               {appear && <Link to='/settings' className={`nav-item btn ${isActive('/settings') ? 'active' : ''}`}>Settings</Link>}

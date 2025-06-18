@@ -10,6 +10,7 @@ Flask==3.1.0
 Flask-Bcrypt==1.0.1
 Flask-Cors==5.0.0
 Flask-Login==0.6.3
+Flask-Mailman==1.1.1
 Flask-Migrate==4.1.0
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
@@ -21,6 +22,7 @@ MarkupSafe==3.0.2
 psycopg2-binary==2.9.10
 pycparser==2.22
 requests==2.32.3
+resend==2.10.0
 SQLAlchemy==2.0.37
 typing_extensions==4.12.2
 unique-namer==1.6.1
