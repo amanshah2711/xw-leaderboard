@@ -14,7 +14,7 @@ FILENAME="backup_${POSTGRES_DB}_${DATE}.sql.gz"
 mkdir -p "$BACKUP_DIR"
 
 # Run the PostgreSQL dump command inside the Docker container and pipe the output to gzip
-docker exec crossword-db pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > "$BACKUP_DIR/$FILENAME"
+docker exec postgres_db pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > "$BACKUP_DIR/$FILENAME"
 
 # Optional: Add logging (this will log the backup process)
 echo "Backup completed at $(date)" >> "$BACKUP_DIR/backup_log.txt"
