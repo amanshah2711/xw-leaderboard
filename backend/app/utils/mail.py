@@ -2,6 +2,8 @@
 import resend
 import os
 from flask import render_template
+from . import frontend_url
+from .encryption import generate_token
 
 resend.api_key = os.getenv('RESEND_API_KEY')
 
@@ -22,4 +24,9 @@ def send_email_verification_email(verify_link, addressee):
     "subject": "[XWLeaderboard] Email Verification",
     'html': html_body,
 })
+
+def create_and_send_verification_email(addressee):
+        token = generate_token(addressee, 'verify-email-salt')
+        verify_url = frontend_url + '/api/verify-email/' + token
+        send_email_verification_email(verify_link=verify_url, addressee=addressee)
     

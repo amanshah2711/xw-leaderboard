@@ -2,17 +2,34 @@
 from . import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 from sqlalchemy import UniqueConstraint
 import os
 
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    
+    # Account Credentials
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
+    
+    # Account Status
+    email_verified = db.Column(db.Boolean, default=False, nullable=False)
+    email_verified_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    account_status = db.Column(db.String(200), default='pending', nullable=False) # options are active, pending, suspended
+
+    # Account Metadata
+    created_at = db.Column(db.DateTime(timezone=True), default = lambda : datetime.now(timezone.utc), nullable=False)
+    last_login_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    
+    # Social 
     invite_link = db.Column(db.String(200), unique=True, nullable=False)
+
+    # NYT
     encrypted_nyt_cookie = db.Column(db.String(500), nullable=True)
+    
 
     games = db.relationship('CrosswordData', backref='user', foreign_keys='[CrosswordData.user_id]', lazy='dynamic')
 

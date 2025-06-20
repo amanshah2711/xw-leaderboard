@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react"
 import RegistrationManager from "./RegistrationManager";
 import LoginManager from "./LoginManager";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useFetch } from "./services/useFetch.jsx"
 
 export default function HomePage() {
     const [showRegistrationManager, setShowRegistrationManager] = useState(false);
-    const [message, setMessage] = useState("");
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const status = queryParams.get('message');
+    const [message, setMessage] = useState(status);
     const navigate = useNavigate();
     const { data, loading, error } = useFetch("/api/check-login");
     if (loading) return <p>Loading...</p>;
