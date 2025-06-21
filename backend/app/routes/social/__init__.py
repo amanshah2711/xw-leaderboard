@@ -49,6 +49,6 @@ def remove_friend():
             db.session.delete(friend_entry)
             db.session.delete(friend_entry2)
             db.session.commit()
-            return jsonify({'message': 'Friendship successfully deleted'}), 200
+            return jsonify({'message': 'Friendship successfully deleted. Refresh to see updated leaderboard.'}), 200
         else:
             return jsonify({'message': 'An error occurred while deleting your friend'}), 200
