@@ -17,7 +17,7 @@ def sync(date_string, kind):
     group_ids = set([friend.friend_two for friend in friends] + [current_user.id])
 
     completed_data_query = db.session.query(CrosswordData).filter(CrosswordData.user_id.in_(group_ids), CrosswordData.day == target_date, CrosswordData.status == 'complete', CrosswordData.kind == kind).order_by(CrosswordData.solve_time.asc()).all()
-    completed_data = [{'username' : User.query.filter_by(id=data.user_id).first().username, 'solve_time': data.solve_time} for data in completed_data_query]
+    completed_data = [{'username' : User.query.filter_by(id=data.user_id).first().username, 'solve_time': data.solve_time, 'id' : data.user_id} for data in completed_data_query]
     completed_ids = set([data.user_id for data in completed_data_query])
     
     ids_to_check = group_ids - completed_ids
@@ -34,17 +34,17 @@ def sync(date_string, kind):
                     stmt = insert(CrosswordData).values(user_id=id, day=target_date, solve_time=solve_time, status='complete', kind=kind).on_conflict_do_nothing(index_elements=['user_id', 'day'])
                     db.session.execute(stmt)
 
-                completed_data.append({'username' : user.username, 'solve_time': solve_time})
+                completed_data.append({'username' : user.username, 'solve_time': solve_time, 'id': id})
                 completed_ids.add(id)
 
     db.session.commit()
 
     incompleted_ids = group_ids - completed_ids
-    incompleted_data = [User.query.filter_by(id=id).first().username for id in incompleted_ids]
+    incompleted_data = [{'username' : User.query.filter_by(id=id).first().username, 'id' : id} for id in incompleted_ids]
 
     completed_data.sort(key=lambda d:d['solve_time'])
     
-    return jsonify({"complete" : completed_data, "incomplete" : incompleted_data}), 200
+    return jsonify({"complete" : completed_data, "incomplete" : incompleted_data, 'current_user' : current_user.id}), 200
 
 @app.route('/api/puzzle-link/<date_string>/<kind>', methods=['GET'])
 @login_required

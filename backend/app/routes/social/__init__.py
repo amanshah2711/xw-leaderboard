@@ -40,4 +40,15 @@ def reset_invite_link():
 @login_required
 def remove_friend():
     if request.method == 'POST':
-        data = request.json()
+        data = request.get_json()
+        id_a = data.get('friend_one')
+        id_b = data.get('friend_two')
+        friend_entry = Friends.query.filter_by(friend_one = id_a, friend_two = id_b).first()
+        friend_entry2 = Friends.query.filter_by(friend_one = id_b, friend_two = id_a).first()
+        if friend_entry:
+            db.session.delete(friend_entry)
+            db.session.delete(friend_entry2)
+            db.session.commit()
+            return jsonify({'message': 'Friendship successfully deleted'}), 200
+        else:
+            return jsonify({'message': 'An error occurred while deleting your friend'}), 200
