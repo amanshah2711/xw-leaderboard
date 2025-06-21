@@ -24,7 +24,7 @@ def login():
             else:
                 return jsonify({"logged_in": True, "redirect" : "/settings", 'message' : 'Your cookie has expired or become invalid. Please submit it again to use our service.'}), 200
         else:
-            create_and_send_verification_email(email)
+            create_and_send_verification_email(email, user.id)
             return jsonify({'logged_in' : False, 'message' : 'Email needs to be verified, a confirmation email was sent to your inbox.'})
         
     return jsonify({"logged_in" : False, "message":"Invalid email or password"}), 200 
