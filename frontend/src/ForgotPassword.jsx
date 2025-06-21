@@ -11,6 +11,7 @@ export default function ForgotPassword() {
         const data = await submitData({email: email});
         setMessage(data.message);
         console.log(data.debug);
+        console.log(data.info);
     };  
     return (
         <div className="container">

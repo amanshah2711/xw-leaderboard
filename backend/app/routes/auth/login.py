@@ -2,7 +2,7 @@ from app import app
 
 from flask import request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from app.models import User
+from app.models import User, db
 from app.utils.mail import create_and_send_verification_email
 from app.utils.nyt_data import cookie_check
 from app.utils.encryption import decrypt_cookie
@@ -15,9 +15,10 @@ def login():
     password = data.get('password')
     user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
-        if user.email_verified:
+        if user.account_status == 'active':
             login_user(user)
             user.last_login_at = datetime.now(timezone.utc)
+            db.session.commit()
             if user.encrypted_nyt_cookie and cookie_check(decrypt_cookie(user.encrypted_nyt_cookie)):
                 return jsonify({"logged_in": True, "redirect" : "/daily"}), 200
             else:
@@ -36,7 +37,4 @@ def logout():
 
 @app.route('/api/check-login')
 def check_login():
-    if current_user.is_authenticated:
-        return jsonify({"logged_in": True})
-    else:
-        return jsonify({"logged_in": False})
+    return jsonify({'logged_in' : bool(current_user.is_authenticated)})

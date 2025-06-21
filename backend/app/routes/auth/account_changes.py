@@ -4,6 +4,7 @@ from flask import request, jsonify
 from flask_login import login_required, current_user
 from app.models import User, CrosswordData, Friends, db
 from app.utils.mail import send_reset_email
+from app.utils.social import valid_display_name
 from app.utils.encryption import generate_token, verify_token
 from app.utils import frontend_url
 from app.forms.auth import PasswordChangeForm
@@ -48,9 +49,14 @@ def change_email():
 def change_username():
     data = request.get_json()  
     new_username = data.get('username')
-    current_user.username = new_username
-    db.session.commit()
-    return jsonify({'success': True, 'message' : 'Your username has been successfully changed. Visit the leaderboard to see it!'}), 200
+    if valid_display_name(new_username):
+        current_user.username = new_username
+        message = 'Your username has been successfully changed. Visit the leaderboard to see it!'
+        db.session.commit()
+    else:
+        message = 'Our profanity filter has not approved of your new display name.'
+
+    return jsonify({'success': True, 'message' : message}), 200
 
 @app.route('/api/request-reset-password', methods=['POST'])
 def request_reset_password():
@@ -59,9 +65,11 @@ def request_reset_password():
     token = generate_token(email, 'password-reset-salt')
     reset_url = frontend_url + '/reset-password/' + token
 
-    send_reset_email(reset_url, email)
-    
-    return jsonify({'success': True, 'message': 'Succesfully sent link to your email, if it exists.', 'debug': reset_url}), 200
+    success, info = send_reset_email(reset_url, email)
+    if success:
+        return jsonify({'success': True, 'message': 'Succesfully sent link to your email, if it exists.', 'debug': reset_url, 'info': info}), 200
+    else:
+        return jsonify({'success': False, 'message': 'There was an error sending you an email. Make sure your email was properly entered.', 'debug': reset_url, 'info': info}), 200
 
 @app.route('/api/reset-password/<token>', methods=['POST'])
 def reset_password(token):

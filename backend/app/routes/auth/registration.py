@@ -51,8 +51,9 @@ def verify_email(token):
         user = User.query.filter_by(email=email).first()
         if user:
             user.email_verified = True
-            user.email_verified = datetime.now(timezone.utc)
+            user.email_verified_at = datetime.now(timezone.utc)
             user.account_status = 'active'
+            db.session.commit()
             return redirect(frontend_url + "?message=Email%20Verified%20Successfully") 
         else:
             return redirect(frontend_url + "?message=Error%20Occurred") 
