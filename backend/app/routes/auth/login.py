@@ -28,7 +28,7 @@ def login():
             if success:
                 return jsonify({'logged_in' : False, 'message' : 'Email needs to be verified, a confirmation email was sent to your inbox.'})
             else:
-                return jsonify({'logged_in' : False, 'message' : 'An error occurred while sending your email ' + str(info)})
+                return jsonify({'logged_in' : False, 'message' : 'An error occurred while sending your email'})
 
         
     return jsonify({"logged_in" : False, "message":"Invalid email or password"}), 200 
