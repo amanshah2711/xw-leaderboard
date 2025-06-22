@@ -26,7 +26,7 @@ def register():
             return jsonify({"success": False, "message": "Email is already registered"}), 200
         user = User(username=username, email=email, invite_link=invite_link)
         user.set_password(password)
-        success, info = create_and_send_verification_email(email)
+        success, info = create_and_send_verification_email(email, user.id)
         if success:
             db.session.add(user)
             db.session.commit()
