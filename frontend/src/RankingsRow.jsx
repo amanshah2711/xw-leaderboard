@@ -16,7 +16,7 @@ function formatTime(seconds) {
 
 export default function RankingsRow({entry, row_id, rank, current_id, completed}) {
     const [hover, setHover] = useState(false);
-    const [newName, setNewName] = useState(entry.username);
+    const [newName, setNewName] = useState("");
     const { submitData : submitUsername, loading : usernameLoading , error : usernameError } = useSubmit("/api/change-username");
     const { submitData : submitFriendRemoval, loading: friendRemovalLoading, error: friendRemovalError } = useSubmit("/api/remove-friend");
 
@@ -31,7 +31,9 @@ export default function RankingsRow({entry, row_id, rank, current_id, completed}
         const data = await submitFriendRemoval({'friend_one' : current_id, 'friend_two' : row_id});
         alert(data.message);
     };  
-
+    useEffect(() => {
+        setNewName(entry.username);
+    }, [entry.username]);
     return (
         <div 
             className="d-flex align-items-center justify-content-center"
