@@ -19,13 +19,13 @@ export default function Rankings({day, kind}) {
             <div className="col-4 justify-content-center align-items-center">
                 <ul className="list-group list-group-flush">
                     {data.complete.map((entry, index) => (
-                        <div key={index}>
+                        <div key={entry.id}>
                             <RankingsRow entry={entry} rank={index} row_id={entry.id} current_id={data.current_user} completed={true}/> 
                             <hr className="col-md-12"></hr>
                         </div>
                     ))}
                     {data.incomplete.map((entry, index) => (
-                        <div key={index}>
+                        <div key={entry.id}>
                             <RankingsRow entry={entry} rank={NaN} row_id={entry.id} current_id={data.current_user} completed={false}/> 
                             <hr className="col-md-12"></hr>
                         </div>

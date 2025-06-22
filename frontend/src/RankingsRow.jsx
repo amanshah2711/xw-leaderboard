@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import{ useState, useEffect } from "react";
 import { useSubmit } from "./services/useSubmit";
 import RankingsRowDecorator from "./RankingsRowDecorator";
 function formatTime(seconds) {
