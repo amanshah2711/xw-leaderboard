@@ -16,12 +16,11 @@ function formatTime(seconds) {
 
 export default function RankingsRow({entry, row_id, rank, current_id, completed}) {
     const [hover, setHover] = useState(false);
-    const [newName, setNewName] = useState("");
+    const [newName, setNewName] = useState(entry.username);
     const { submitData : submitUsername, loading : usernameLoading , error : usernameError } = useSubmit("/api/change-username");
     const { submitData : submitFriendRemoval, loading: friendRemovalLoading, error: friendRemovalError } = useSubmit("/api/remove-friend");
 
     const isSelf = current_id == row_id;
-    setNewName(entry.username);
     const handleChange = async (e) => {
         e.preventDefault();
         const data = await submitUsername({'username' : newName});
