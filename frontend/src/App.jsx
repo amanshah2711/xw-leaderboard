@@ -6,10 +6,11 @@ import Leaderboard from './Leaderboard';
 import NavBar from './NavBar';
 import CookieManager from './CookieManager';
 import HomePage from './HomePage';
-import Settings from './Settings';
 import { useFetch } from './services/useFetch';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
+import AccountSettings from './AccountSettings';
+import NYTSettings from './NYTSettings';
 
 function App() {
     const { data, loading, error } = useFetch("/api/csrf-token");
@@ -25,7 +26,8 @@ function App() {
         <Route path="/" element={<HomePage/>}/>
         <Route path="/daily" element={<Leaderboard kind={"daily"}/>}/>
         <Route path="/mini" element={<Leaderboard kind={"mini"}/>}/>
-        <Route path="/settings" element={<Settings/>}/>
+        <Route path="/account-settings" element={<AccountSettings/>}/>
+        <Route path="/nyt-settings" element={<NYTSettings/>}/>
         <Route path="/cookies" element={<CookieManager/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password/:token" element={<ResetPassword/>}/>
