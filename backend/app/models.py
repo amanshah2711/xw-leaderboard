@@ -45,10 +45,13 @@ class User(UserMixin, db.Model):
 class CrosswordData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    day = db.Column(db.Date, nullable=False)
-    solve_time = db.Column(db.Integer, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='incomplete')
+
     kind = db.Column(db.String(20), nullable=False, default='daily')
+    day = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='incomplete') #options should be complete, partial, unattempted, unknown
+    solve_time = db.Column(db.Integer, nullable=False)
+
+    #last_fetched = db.Column(db.Date, nullable=True)
     
     __table_args__ = (UniqueConstraint("user_id", "day", name="unique_user_day"),)
 

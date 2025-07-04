@@ -24,6 +24,7 @@ export default function RankingsRow({entry, row_id, rank, current_id, completed}
     const handleChange = async (e) => {
         e.preventDefault();
         const data = await submitUsername({'username' : newName});
+        alert(data.message)
     };  
 
     const handleRemove = async (e) => {
@@ -45,14 +46,18 @@ export default function RankingsRow({entry, row_id, rank, current_id, completed}
             {isSelf ? (
                 <input
                     type="text"
-                    className="form-control-plaintext mb-0 text-muted lead"
+                    className="mb-0 text-muted lead border-0 p-0"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') handleChange(e);
                     }}
                     autoFocus
-                    style={{ maxWidth: '160px' }}
+                    style={{
+                        outline: 'none',
+                        whiteSpace: 'nowrap',
+                    }}
+                    size={newName.length+1}
                 />
             ) : (
                 <p

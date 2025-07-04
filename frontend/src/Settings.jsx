@@ -3,6 +3,7 @@ import ChangePassword from "./ChangePassword";
 import ChangeUsername from "./ChangeUsername";
 import CookieManager from "./CookieManager";
 import DeleteAccount from "./DeleteAccount";
+import SyncAll from "./SyncAll";
 
 export default function Settings() {
     return (
@@ -11,6 +12,7 @@ export default function Settings() {
             <ChangeUsername/>
             <ChangeEmail/>
             <ChangePassword/>
+            <SyncAll/>
             <DeleteAccount/>
         </div>
     )

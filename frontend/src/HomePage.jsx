@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import RegistrationManager from "./RegistrationManager";
 import LoginManager from "./LoginManager";
 import { useNavigate, useLocation } from "react-router-dom";
