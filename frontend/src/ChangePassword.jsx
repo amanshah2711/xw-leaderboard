@@ -17,7 +17,6 @@ export default function ChangePassword() {
     return (
         <div className="container">
             <div className="row justify-content-center m-2">
-                <div></div>
                 <div className="col-4">
                     <form>
                         <div className="form-group text-start mb-4">
