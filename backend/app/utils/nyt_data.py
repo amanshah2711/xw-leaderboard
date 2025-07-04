@@ -1,6 +1,6 @@
 
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from .encryption import decrypt_cookie
 from ..models import db, CrosswordData
@@ -16,7 +16,7 @@ now_in_new_york = datetime.now(new_york_tz)
 formatted_date = now_in_new_york.strftime('%Y-%m-%d')
 
 # Archive start date
-archive_start_date = datetime(2024, 11, 21, tzinfo=new_york_tz)
+archive_start_date = datetime(2024, 9, 21, tzinfo=new_york_tz)
 
 # NYT API Base (figured out by monitoring network traffic)
 nyt_base_url = 'https://www.nytimes.com'
@@ -27,6 +27,7 @@ metadata_endpoint = 'puzzle/daily'
 history_endpoint = lambda date_start, date_end : f'svc/crosswords/v3/puzzles.json?publish_type=daily&sort_order=asc&sort_by=print_date&date_start={date_start}&date_end={date_end}'
 
 mini_metadata_endpoint = 'puzzle/mini'
+# This doesn't work TODO: debug
 mini_history_endpoint = lambda date_start, date_end : f'svc/crosswords/v3/puzzles.json?publish_type=mini&sort_order=asc&sort_by=print_date&date_start={date_start}&date_end={date_end}'
 
 data_endpoint = 'game'
@@ -55,23 +56,24 @@ nyt_mini_puzzle_solve_data = lambda game_id : f'{nyt_base_url}/{backend_endpoint
 
 create_header = lambda cookie : {'Cookie' : cookie, 'User-Agent' : 'XWLeaderboard/1.0'}
 
-def upsert(user, date, status, solve_time, kind='daily'):
+def upsert(user, date, status, solve_time, percent_filled, kind='daily'):
     entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == user.id, CrosswordData.day == date, CrosswordData.kind == kind).first()
+    utc_now = datetime.now(timezone.utc)
     if entry:
-        entry.status, entry.solve_time = status, solve_time 
+        entry.status, entry.solve_time, entry.last_fetched = status, solve_time, utc_now 
     else:
-        stmt = insert(CrosswordData).values(user_id=user.id, day=date, solve_time=solve_time, status=status, kind=kind).on_conflict_do_nothing(index_elements=['user_id', 'day'])
+        stmt = insert(CrosswordData).values(user_id=user.id, day=date, solve_time=solve_time, status=status, percent_filled=percent_filled, kind=kind, last_fetched=utc_now).on_conflict_do_nothing(index_elements=['user_id', 'day'])
         db.session.execute(stmt)
 
 def fupsert(user, date, kind='daily'):
     puzzle_statistics = get_puzzle_statistics(date, decrypt_cookie(user.encrypted_nyt_cookie), type=kind)
     if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
         solve_time = puzzle_statistics['calcs']['secondsSpentSolving']
-        upsert(user, date, 'complete', solve_time, kind=kind)
-    elif 'percent_filled' in puzzle_statistics['calcs']:
-        upsert(user, date, 'partial', -1, kind)
+        upsert(user, date, 'complete', solve_time, 100, kind=kind)
+    elif 'percentFilled' in puzzle_statistics['calcs']:
+        upsert(user, date, 'partial', None, puzzle_statistics['calcs']['percentFilled'], kind=kind)
     else:
-        upsert(user, date, 'unattempted', -1, kind)
+        upsert(user, date, 'unattempted', None, 0, kind=kind)
 
 def aggregrate_solved_puzzles(cookie, type='daily'):
     upper_bound = now_in_new_york

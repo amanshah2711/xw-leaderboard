@@ -14,18 +14,17 @@ def sync_all(kind):
     results = aggregrate_solved_puzzles(decrypt_cookie(current_user.encrypted_nyt_cookie), type=kind) 
     for day in results:
         target_date = datetime.strptime(day['print_date'], '%Y-%m-%d').date()
-        print(target_date)
         if day['solved']:
             status = 'complete'
             fupsert(current_user, target_date, kind=kind)
         elif day['percent_filled']:
             status = 'partial'
-            solve_time = -1
-            upsert(current_user, target_date, status, solve_time, kind=kind)
+            solve_time = None
+            upsert(current_user, target_date, status, solve_time, day['percent_filled'], kind=kind)
         else:
             status = 'unattempted'
-            solve_time = -1
-            upsert(current_user, target_date, status, solve_time, kind=kind)
+            solve_time = None
+            upsert(current_user, target_date, status, solve_time, 0, kind=kind)
 
     db.session.commit()
     return jsonify({'message': 'Data Sync Was Successful'}), 200
