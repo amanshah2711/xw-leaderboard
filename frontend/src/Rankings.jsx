@@ -9,8 +9,8 @@ const formatter = new Intl.DateTimeFormat("en-CA", {
       day: "2-digit",  
     });
 
-export default function Rankings({day, kind}) {
-    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatter.format(day)}${'/'}${kind}`);
+export default function Rankings({day, kind, refreshTrigger}) {
+    const {data, loading, error } = useFetch(`${"/api/sync/"}${formatter.format(day)}${'/'}${kind}${'/False'}`, [refreshTrigger]);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
