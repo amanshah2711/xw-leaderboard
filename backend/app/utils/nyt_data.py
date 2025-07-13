@@ -2,6 +2,7 @@
 import requests
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
+import time
 from .encryption import decrypt_cookie
 from ..models import db, CrosswordData
 from sqlalchemy.dialects.postgresql import insert
@@ -16,7 +17,8 @@ now_in_new_york = datetime.now(new_york_tz)
 formatted_date = now_in_new_york.strftime('%Y-%m-%d')
 
 # Archive start date
-archive_start_date = datetime(2024, 9, 21, tzinfo=new_york_tz)
+archive_start_date = datetime(1993, 11, 21, tzinfo=new_york_tz).date()
+mini_start_date = datetime(2014, 8, 21, tzinfo=new_york_tz).date()
 
 # NYT API Base (figured out by monitoring network traffic)
 nyt_base_url = 'https://www.nytimes.com'
@@ -62,52 +64,75 @@ def upsert(user, date, status, solve_time, percent_filled, kind='daily'):
     if entry:
         entry.status, entry.solve_time, entry.last_fetched = status, solve_time, utc_now 
     else:
-        stmt = insert(CrosswordData).values(user_id=user.id, day=date, solve_time=solve_time, status=status, percent_filled=percent_filled, kind=kind, last_fetched=utc_now).on_conflict_do_nothing(index_elements=['user_id', 'day'])
+        stmt = insert(CrosswordData).values(user_id=user.id, day=date, solve_time=solve_time, status=status, percent_filled=percent_filled, kind=kind, last_fetched=utc_now).on_conflict_do_nothing(index_elements=['user_id', 'day', 'kind'])
         db.session.execute(stmt)
+    return status, solve_time
 
-def fupsert(user, date, kind='daily'):
-    puzzle_statistics = get_puzzle_statistics(date, decrypt_cookie(user.encrypted_nyt_cookie), type=kind)
-    if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
-        solve_time = puzzle_statistics['calcs']['secondsSpentSolving']
-        upsert(user, date, 'complete', solve_time, 100, kind=kind)
-    elif 'percentFilled' in puzzle_statistics['calcs']:
-        upsert(user, date, 'partial', None, puzzle_statistics['calcs']['percentFilled'], kind=kind)
+def fupsert(user, date, kind='daily', force=False, session=None, id=None):
+    entry = db.session.query(CrosswordData).filter(CrosswordData.user_id == user.id, CrosswordData.day == date, CrosswordData.kind == kind).first()
+    current_date = datetime.now(new_york_tz).date()
+    is_there_data = entry and entry.status == 'complete'
+    does_data_needs_refresh = not entry or (not is_there_data and abs(date - current_date) <= timedelta(weeks=2)) or (not is_there_data and abs(entry.last_fetched - current_date) > timedelta(days=1))
+    if force or does_data_needs_refresh:
+        puzzle_statistics = get_puzzle_statistics(date, decrypt_cookie(user.encrypted_nyt_cookie), type=kind, session=session, id=id)
+        if 'solved' in puzzle_statistics['calcs'] and puzzle_statistics['calcs']['solved']: # Check for reset solves right now it appears "firsts" appears. Check does open, solved equate to solve time or other way to interpolate solve time
+            solve_time = puzzle_statistics['calcs']['secondsSpentSolving']
+            return upsert(user, date, 'complete', solve_time, 100, kind=kind)
+        elif 'percentFilled' in puzzle_statistics['calcs']:
+            return upsert(user, date, 'partial', None, puzzle_statistics['calcs']['percentFilled'], kind=kind)
+        else:
+            return upsert(user, date, 'unattempted', None, 0, kind=kind)
     else:
-        upsert(user, date, 'unattempted', None, 0, kind=kind)
+        return entry.status, entry.solve_time
+
 
 def aggregrate_solved_puzzles(cookie, type='daily'):
-    upper_bound = now_in_new_york
-    lower_bound = now_in_new_york - timedelta(days=90)
+    session = requests.Session()
+    upper_bound = datetime.now(new_york_tz).date()
+    lower_bound = upper_bound - timedelta(days=90)
     history_url = history_endpoint if type == 'daily' else mini_history_endpoint
     results = []
-    while (lower_bound >= archive_start_date and upper_bound >= lower_bound): 
-        response = requests.get(nyt_base_url + '/' + history_url(lower_bound.strftime('%Y-%m-%d'), upper_bound.strftime('%Y-%m-%d')), headers=create_header(cookie))
+    count = 0
+    start_date = archive_start_date if type == 'daily' else mini_start_date
+    while (lower_bound >= start_date and upper_bound >= lower_bound): 
+        response = session.get(nyt_base_url + '/' + history_url(lower_bound.strftime('%Y-%m-%d'), upper_bound.strftime('%Y-%m-%d')), headers=create_header(cookie))
+        print('iteration count: ', count)
+        count += 1
         if response.json() and response.json()['status'] == 'OK':
             upper_bound = lower_bound - timedelta(days=1)
             lower_bound = max(upper_bound - timedelta(days=90), archive_start_date)
             results += response.json()['results']
+            time.sleep(0.5)
         else:
             print('Error occurred while fetching data')
             return
     return results
 
-def get_puzzle_info(date_string, cookie, type='daily'): 
+def get_puzzle_info(date_string, cookie, type='daily', session=None): 
     metadata = nyt_puzzle_metadata if type == 'daily' else nyt_mini_puzzle_metadata
-    response = requests.get(metadata(date_string), headers=create_header(cookie))
+    if session:
+        pass
+        response = session.get(metadata(date_string), headers=create_header(cookie))
+    else:
+        response = requests.get(metadata(date_string), headers=create_header(cookie))
     if response.status_code == 200:
         return response.json()
     else:
         print('Error while fetching metadata')
 
-def get_puzzle_statistics(date_string, cookie, type='daily'):
-    puzzle_info = get_puzzle_info(date_string, cookie, type=type)
+def get_puzzle_statistics(date_string, cookie, type='daily', id=None, session=None):
+    if not id:
+        puzzle_info = get_puzzle_info(date_string, cookie, type=type)
+        id = puzzle_info['id']
     solve_data = nyt_puzzle_solve_data if type == 'daily' else nyt_mini_puzzle_solve_data
-    if puzzle_info:
-        response = requests.get(solve_data(puzzle_info['id']), headers=create_header(cookie))
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print('Error while fetching puzzle times')
+    if session:
+        response = session.get(solve_data(id), headers=create_header(cookie))
+    else:
+        response = requests.get(solve_data(id), headers=create_header(cookie))
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print('Error while fetching puzzle times')
  
 def cookie_check(cookie): #NYT response returns a json with key "message" and value "Forbidden" for invalid cookies
     return bool(get_puzzle_info(formatted_date, cookie))

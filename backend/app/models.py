@@ -54,7 +54,7 @@ class CrosswordData(db.Model):
 
     last_fetched = db.Column(db.Date, nullable=True)
     
-    __table_args__ = (UniqueConstraint("user_id", "day", name="unique_user_day"),)
+    __table_args__ = (UniqueConstraint("user_id", "day", "kind", name="unique_user_day"),)
 
 class Friends(db.Model):
     friend_one = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)

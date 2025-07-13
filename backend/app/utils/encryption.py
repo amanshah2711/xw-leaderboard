@@ -8,7 +8,7 @@ timed_serializer = URLSafeTimedSerializer(os.getenv('FLASK_SECRET_KEY', 'default
 password_reset_salt = os.getenv('PASSWORD_RESET_SALT', 'password-reset-salt')
 email_verify_salt = os.getenv('EMAIL_VERIFY_SALT', 'email-verify-salt')
 
-fernet = Fernet(os.getenv('NYT_COOKIE_ENCRYPTION_KEY', "sdfsdfdsfsdfs"))
+fernet = Fernet(os.getenv('NYT_COOKIE_ENCRYPTION_KEY', Fernet.generate_key()))
 
 def encrypt_cookie(cookie):
     return fernet.encrypt(cookie.encode()).decode()

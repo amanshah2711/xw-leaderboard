@@ -2,9 +2,9 @@
 import resend
 import os
 from flask import render_template
-from . import frontend_url
-from .encryption import generate_token
-from .encryption import email_verify_salt
+from ..utils import frontend_url
+from ..utils.encryption import generate_token
+from ..utils.encryption import email_verify_salt
 
 resend.api_key = os.getenv('RESEND_API_KEY')
 
