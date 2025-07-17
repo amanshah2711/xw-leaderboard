@@ -22,7 +22,7 @@ def login():
             if user.encrypted_nyt_cookie and cookie_check(decrypt_cookie(user.encrypted_nyt_cookie)):
                 return jsonify({"logged_in": True, "redirect" : "/daily"}), 200
             else:
-                return jsonify({"logged_in": True, "redirect" : "/settings", 'message' : 'Your cookie has expired or become invalid. Please submit it again to use our service.'}), 200
+                return jsonify({"logged_in": True, "redirect" : "/nyt-settings", 'message' : 'Your cookie has expired or become invalid. Please submit it again to use our service.'}), 200
         else:
             success, info = create_and_send_verification_email(email, user.id)
             if success:

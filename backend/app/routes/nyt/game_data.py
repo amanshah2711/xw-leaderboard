@@ -1,6 +1,8 @@
 from app import app
 from flask import request, jsonify, Response
 from flask_login import login_required, current_user
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from app.models import User, CrosswordData, Friends, db
 from app.utils.nyt_data import get_puzzle_statistics, nyt_mini_puzzle_url, nyt_puzzle_url, cookie_check, aggregrate_solved_puzzles, upsert, fupsert, new_york_tz
 from app.utils.encryption import decrypt_cookie, encrypt_cookie
@@ -14,13 +16,16 @@ from datetime import datetime, timedelta
 
 import csv
 import io
+
+limiter = Limiter(get_remote_address, app=app)
+
+
 def sync_all(kind, user):
     with app.app_context():
         results = aggregrate_solved_puzzles(decrypt_cookie(user.encrypted_nyt_cookie), type=kind) 
         session = requests.Session()
         for day in results:
             target_date = datetime.strptime(day['print_date'], '%Y-%m-%d').date()
-            print(target_date)
             if day['solved']:
                 status = 'complete'
                 fupsert(user, target_date, kind=kind, session=session, id=day['puzzle_id'])
@@ -34,11 +39,14 @@ def sync_all(kind, user):
                 solve_time = None
                 upsert(user, target_date, status, solve_time, 0, kind=kind)
         db.session.commit()
+
+
 @app.route('/api/full-sync/<kind>', methods=['GET', 'POST'])
+@limiter.limit('2 per day')
 @login_required
 def async_all(kind):
     Thread(target=sync_all, args=(kind, current_user._get_current_object())).start()
-    return jsonify({'message' : 'Sync started. This may take some time if you have been a long time solver.'})
+    return jsonify({'message' : f'Sync for {kind} crosswords has started. This may take some time if you have many solves.\n'})
 
 
 @app.route('/api/sync/<date_string>/<kind>/<force>', methods=['GET'])

@@ -23,7 +23,7 @@ export default function Leaderboard ({kind}) {
     .then(() => {
       setTimeout(() => {
         setRefreshTrigger(prev => prev + 1);
-      }, 50);  // 2 seconds, adjust as needed
+      }, 50); 
     })
     .catch(err => console.error("Refresh failed:", err));
   };
