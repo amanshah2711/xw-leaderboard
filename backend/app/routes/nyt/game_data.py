@@ -72,7 +72,7 @@ def sync(date_string, kind, force):
     ids_to_check = group_ids - completed_ids
     for id in ids_to_check:
         user = User.query.filter_by(id=id).first()
-        if user.encrypted_nyt_cookie: # Make sure to check and validate cookies
+        if user.encrypted_nyt_cookie and cookie_check(decrypt_cookie(user.encrypted_nyt_cookie)): # Make sure to check and validate cookies
             status, solve_time = fupsert(user, target_date, kind, force=force)
             if status == 'complete':
                 completed_data.append({'username' : user.username, 'solve_time': solve_time, 'id': id})

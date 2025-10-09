@@ -14,7 +14,7 @@ export default function HomePage() {
     const { data, loading, error } = useFetch("/api/check-login");
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
-    if (data.logged_in) {
+    if (!loading && data.logged_in) {
         navigate('/daily');
     } 
     return (

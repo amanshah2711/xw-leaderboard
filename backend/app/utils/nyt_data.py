@@ -110,15 +110,19 @@ def aggregrate_solved_puzzles(cookie, type='daily'):
 
 def get_puzzle_info(date_string, cookie, type='daily', session=None): 
     metadata = nyt_puzzle_metadata if type == 'daily' else nyt_mini_puzzle_metadata
-    if session:
-        pass
-        response = session.get(metadata(date_string), headers=create_header(cookie))
-    else:
-        response = requests.get(metadata(date_string), headers=create_header(cookie))
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print('Error while fetching metadata')
+    try:
+        if session:
+            response = session.get(metadata(date_string), headers=create_header(cookie))
+        else:
+            response = requests.get(metadata(date_string), headers=create_header(cookie))
+        print('status code:', response.status_code, date_string, cookie, flush=True)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Failed request: {response.status_code} {response.reason}", flush=True)
+    except Exception as e:
+        print('Request failed:', e)
+        return None
 
 def get_puzzle_statistics(date_string, cookie, type='daily', id=None, session=None):
     if not id:
