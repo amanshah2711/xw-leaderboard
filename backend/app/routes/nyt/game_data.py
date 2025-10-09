@@ -19,6 +19,13 @@ import io
 
 limiter = Limiter(get_remote_address, app=app)
 
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return jsonify({
+        "error": "Too many requests",
+        "message": "You've hit the sync limit. Try again in 24 hours."
+    }), 429
+
 
 def sync_all(kind, user):
     with app.app_context():
