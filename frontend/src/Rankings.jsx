@@ -15,8 +15,7 @@ export default function Rankings({day, kind, refreshTrigger}) {
     if (error) return <p>Error: {error}</p>;
     return (
         <div className="row d-flex justify-content-center align-items-center mb-4 mt-4">
-            <div className="col-4"></div>
-            <div className="col-4 justify-content-center align-items-center">
+            <div className="col-12 col-md-4">
                 <ul className="list-group list-group-flush">
                     {data.complete.map((entry, index) => (
                         <div key={entry.id}>
@@ -32,7 +31,6 @@ export default function Rankings({day, kind, refreshTrigger}) {
                     ))}
                 </ul>
             </div>
-            <div className="col-4"></div>
         </div>
     )
 }

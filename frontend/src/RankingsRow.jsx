@@ -61,7 +61,7 @@ export default function RankingsRow({entry, row_id, rank, current_id, completed}
                 />
             ) : (
                 <p
-                    className={`mb-0 text-muted lead ${hover && isSelf ? 'cursor-pointer' : ''}`}
+                    className={`mb-0 text-muted lead pe-2 ${hover && isSelf ? 'cursor-pointer' : ''}`}
                     onClick={() => isSelf }
                 >
                     {entry.username}
