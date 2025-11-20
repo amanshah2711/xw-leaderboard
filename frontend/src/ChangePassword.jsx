@@ -22,7 +22,7 @@ export default function ChangePassword() {
     return (
         <div className="container">
             <div className="row justify-content-center m-2">
-                <div className="col-4">
+                <div className="col-8 col-md-4">
                     <form>
                         <div className="form-group text-start mb-4">
                             <label htmlFor="password">Change Password:</label>

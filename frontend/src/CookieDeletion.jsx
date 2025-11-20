@@ -11,7 +11,7 @@ export default function CookieDeletion({setValidCookie}) {
 
     return (
         <div className="row justify-content-center m-2">
-            <div className="col-6">
+            <div className="col-12 col-md-6">
                 <h3>Unlink NYT Account</h3>
                 <p>Right now we have your NYT cookie safely encrypted so we can automatically insert your solve times. If you want to unlink your account, click the following button to unlink account.</p>
                 <form>

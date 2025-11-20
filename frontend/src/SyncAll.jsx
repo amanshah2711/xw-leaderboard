@@ -14,7 +14,7 @@ export default function SyncAll() {
     }
     return (
         <div className="row justify-content-center m-2">
-            <div className="col-4">
+            <div className="col-8">
                 <div className="d-flex justify-content-center">
                     <button type="button" className="btn btn-info" onClick={handleSubmit} disabled={loadingDaily || loadingMini}>
                         Sync All NYT Data 
