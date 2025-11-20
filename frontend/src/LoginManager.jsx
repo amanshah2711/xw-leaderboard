@@ -26,9 +26,8 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
             <div className="row justify-content-center">
                 <img src={icon} className="img-fluid" style={{ maxWidth: "300px", height: "auto" }}></img>
             </div>
-            <div className="row">
-                <div className="col-4"></div>
-                <div className="col-4">
+            <div className="row justify-content-center align-items-center">
+                <div className="col-8 col-md-4">
                     <form method="post" autoComplete="on">
                         <div className="form-group text-start mb-4">
                             <input id="user-text-field" type="email" autoComplete="username" value={email} onChange={(e)=>setEmail(e.target.value)} className="form-control" placeholder="Email" required/>
@@ -45,7 +44,6 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
                         <button type="button" className="btn btn-secondary mx-2 mb-2" onClick={() => {setShowRegistrationManager(true);setMessage("")}}>Register</button>
                     </form>
                 </div>
-                <div className="col-4"></div>
             </div>
 	    	<div className="row">
                 <p className="text-center text-secondary">{message}</p>
