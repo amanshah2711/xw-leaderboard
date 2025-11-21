@@ -78,6 +78,8 @@ def sync(date_string, kind, force):
                 completed_data.append({'username' : user.username, 'solve_time': solve_time, 'id': id})
                 completed_ids.add(id)
 
+    db.session.commit()
+
     incompleted_ids = group_ids - completed_ids
     incompleted_data = [{'username' : User.query.filter_by(id=id).first().username, 'id' : id} for id in incompleted_ids]
 
