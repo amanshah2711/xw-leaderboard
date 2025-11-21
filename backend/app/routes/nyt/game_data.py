@@ -77,6 +77,8 @@ def sync(date_string, kind, force):
             if status == 'complete':
                 completed_data.append({'username' : user.username, 'solve_time': solve_time, 'id': id})
                 completed_ids.add(id)
+        elif user.encrypted_nyt_cookie:
+            user.encrypted_nyt_cookie = None
 
     db.session.commit()
 
