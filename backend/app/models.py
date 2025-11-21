@@ -2,7 +2,7 @@ from . import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
-from sqlalchemy import UniqueConstraint
+from sqlalchemy import UniqueConstraint, CheckConstraint
 import os
 
 
@@ -18,7 +18,9 @@ class User(UserMixin, db.Model):
     # Account Status
     email_verified = db.Column(db.Boolean, default=False, nullable=False)
     email_verified_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    account_status = db.Column(db.String(200), default='pending', nullable=False) # options are active, pending, suspended
+    account_status = db.Column(db.Enum('active', 'pending', 'suspended', name='user_status_enum'),
+                                default='pending', 
+                                nullable=False) # options are active, pending, suspended
 
     # Account Metadata
     created_at = db.Column(db.DateTime(timezone=True), default = lambda : datetime.now(timezone.utc), nullable=False)
@@ -42,18 +44,27 @@ class CrosswordData(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    puzzle_type = db.Column(db.String(20), nullable=False, default='daily')
+    # Puzzle Data
+    puzzle_type = db.Column(db.Enum('nyt_daily', 'nyt_mini', name='puzzle_type_enum'), nullable=False)
     day = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='incomplete') #options should be complete, partial, unattempted, unknown
+
+    # Solve Data
+    status = db.Column(db.Enum('complete', 'partial', 'unattempted', 'unknown', name='solve_status_enum'),
+                        nullable=False) #options should be complete, partial, unattempted, unknown
     percent_filled = db.Column(db.Integer, nullable=False)
     solve_time = db.Column(db.Integer, nullable=True)
 
+    # Metadata
     last_fetched = db.Column(db.Date, nullable=True)
     
-    __table_args__ = (UniqueConstraint("user_id", "day", "puzzle_type", name="unique_user_day"),)
+    __table_args__ = (UniqueConstraint("user_id", "day", "puzzle_type", name="unique_user_day_puzzle_type"),)
 
 class Friendship(db.Model):
     __tablename__ = 'friendships'
 
     node_one = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True, nullable=False)
     node_two = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint('node1 < node2', name='check_node1_less_than_node2'),
+    )
