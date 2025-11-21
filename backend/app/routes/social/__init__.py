@@ -1,7 +1,7 @@
 from app import app
 from flask import request, jsonify, redirect
 from flask_login import login_required, current_user
-from app.models import User, Friends, db
+from app.models import User, Friendship, db
 from app.utils.social import invite_formatter, generate_link
 import datetime
 

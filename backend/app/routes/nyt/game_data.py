@@ -3,7 +3,7 @@ from flask import request, jsonify, Response
 from flask_login import login_required, current_user
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from app.models import User, CrosswordData, Friends, db
+from app.models import User, CrosswordData, Friendship, db
 from app.utils.nyt_data import get_puzzle_statistics, nyt_mini_puzzle_url, nyt_puzzle_url, cookie_check, aggregrate_solved_puzzles, upsert, fupsert, new_york_tz
 from app.utils.encryption import decrypt_cookie, encrypt_cookie
 from sqlalchemy.dialects.postgresql import insert
@@ -60,7 +60,7 @@ def async_all(kind):
 @login_required
 def sync(date_string, kind, force):
     target_date = datetime.strptime(date_string, '%Y-%m-%d').date()
-    force= force == 'True'
+    force = force == 'True'
 
     friends = db.session.query(Friends).filter(Friends.friend_one == current_user.id).all()
     group_ids = set([friend.friend_two for friend in friends] + [current_user.id])

@@ -2,7 +2,7 @@ from app import app
 
 from flask import request, jsonify, redirect
 from flask_login import login_required, current_user
-from app.models import User, CrosswordData, Friends, db
+from app.models import User, CrosswordData, Friendship, db
 from app.utils.mail import send_reset_email, create_and_send_verification_email, email_verify_salt
 from app.utils.social import valid_display_name
 from app.utils.encryption import generate_token, verify_token, password_reset_salt
