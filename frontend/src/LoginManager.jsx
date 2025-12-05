@@ -8,7 +8,7 @@ export default function LoginManager ({setShowRegistrationManager, message, setM
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const { submitData, loading, error } = useSubmit("/api/login");
+    const { submitData, loading, error } = useSubmit("/api/auth/login");
 
     const handleSubmit = async (e) => {
         e.preventDefault();

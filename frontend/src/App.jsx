@@ -13,7 +13,7 @@ import AccountSettings from './AccountSettings';
 import NYTSettings from './NYTSettings';
 
 function App() {
-    const { data, loading, error } = useFetch("/api/csrf-token");
+    const { data, loading, error } = useFetch("/api/security/csrf-token");
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (data.csrf_token) {
@@ -24,11 +24,11 @@ function App() {
       <NavBar/>
       <Routes>
         <Route path="/" element={<HomePage/>}/>
-        <Route path="/daily" element={<Leaderboard kind={"daily"}/>}/>
-        <Route path="/mini" element={<Leaderboard kind={"mini"}/>}/>
         <Route path="/account-settings" element={<AccountSettings/>}/>
+        <Route path="/nyt-daily" element={<Leaderboard key='nyt-daily' source={'nyt'} variant={"daily"}/>}/>
+        <Route path="/nyt-mini" element={<Leaderboard key='nyt-mini' source={'nyt'} variant={"mini"}/>}/>
+        <Route path="/nyt-bonus" element={<Leaderboard key='nyt-bonus' source={'nyt'} variant={"bonus"}/>}/>
         <Route path="/nyt-settings" element={<NYTSettings/>}/>
-        <Route path="/cookies" element={<CookieManager/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password/:token" element={<ResetPassword/>}/>
       </Routes>

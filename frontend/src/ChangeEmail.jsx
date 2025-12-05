@@ -5,7 +5,7 @@ import { useSubmit } from "./services/useSubmit";
 export default function ChangeEmail() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change-email");
+    const { submitData, loading, error } = useSubmit("/api/auth/change-email");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await submitData({email: email});
@@ -21,7 +21,7 @@ export default function ChangeEmail() {
                     <form>
                         <div className="form-group text-start mb-4">
                             <label>Change Email:</label>
-                            <input name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New email"/>
+                            <input name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" autoComplete="off" placeholder="New Email"/>
                         </div>
                         <div className="d-flex justify-content-center">
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>

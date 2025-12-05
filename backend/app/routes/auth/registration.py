@@ -10,7 +10,7 @@ from app.forms.auth import RegistrationForm
 from datetime import datetime, timezone
 
 
-@app.route('/api/register', methods=['POST'])
+@app.route('/api/auth/register', methods=['POST'])
 def register():
     form = RegistrationForm()
     if form.validate():

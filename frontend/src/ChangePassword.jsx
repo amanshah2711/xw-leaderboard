@@ -6,7 +6,7 @@ export default function ChangePassword() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change-password");
+    const { submitData, loading, error } = useSubmit("/api/auth/change-password");
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password == confirmPassword) {

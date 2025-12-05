@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useSubmit } from "./services/useSubmit";
 
-export default function ChangeUsername() {
-    const [username, setUsername] = useState("");
+export default function ChangeDisplayName() {
+    const [displayName, setDisplayName] = useState("");
     const [message, setMessage] = useState("");
-    const { submitData, loading, error } = useSubmit("/api/change-username");
+    const { submitData, loading, error } = useSubmit("/api/auth/change-display-name");
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await submitData({username: username});
+        const data = await submitData({displayName: displayName});
         setMessage(data.message);
         if (data.success) {
-            setUsername("");
+            setDisplayName("");
         }
     }
     return (
@@ -21,7 +21,7 @@ export default function ChangeUsername() {
                         <form>
                             <div className="form-group text-start mb-4">
                                 <label>Change Display Name:</label>
-                                <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" autoComplete="off" placeholder="New Display Name"/>
+                                <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="form-control" autoComplete="off" placeholder="New Display Name"/>
                             </div>
                             <div className="d-flex justify-content-center">
                                 <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>

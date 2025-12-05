@@ -9,7 +9,7 @@ export default function RegistrationManager({setShowRegistrationManager, message
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const { submitData, loading, error } = useSubmit("/api/register");
+    const { submitData, loading, error } = useSubmit("/api/auth/register");
 
     const handleSubmit = async (e) => {
         e.preventDefault();

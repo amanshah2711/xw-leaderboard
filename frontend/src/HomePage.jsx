@@ -11,11 +11,11 @@ export default function HomePage() {
     const status = queryParams.get('message');
     const [message, setMessage] = useState(status);
     const navigate = useNavigate();
-    const { data, loading, error } = useFetch("/api/check-login");
+    const { data, loading, error } = useFetch("/api/auth/check-login");
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!loading && data.logged_in) {
-        navigate('/daily');
+        navigate('/nyt-daily');
     } 
     return (
         <div>

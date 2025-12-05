@@ -17,24 +17,24 @@ function formatTime(seconds) {
 export default function RankingsRow({entry, row_id, rank, current_id, completed}) {
     const [hover, setHover] = useState(false);
     const [newName, setNewName] = useState("");
-    const { submitData : submitUsername, loading : usernameLoading , error : usernameError } = useSubmit("/api/change-username");
-    const { submitData : submitFriendRemoval, loading: friendRemovalLoading, error: friendRemovalError } = useSubmit("/api/remove-friend");
+    const { submitData : submitDisplayName, loading : displayNameLoading, error : displayNameError } = useSubmit("/api/auth/change-display-name");
+    const { submitData : submitFriendRemoval, loading: friendRemovalLoading, error: friendRemovalError } = useSubmit("/api/social/remove-friend");
 
     const isSelf = current_id == row_id;
     const handleChange = async (e) => {
         e.preventDefault();
-        const data = await submitUsername({'username' : newName});
+        const data = await submitDisplayName({'displayName' : newName});
         alert(data.message)
     };  
 
     const handleRemove = async (e) => {
         e.preventDefault();
-        const data = await submitFriendRemoval({'friend_one' : current_id, 'friend_two' : row_id});
+        const data = await submitFriendRemoval({'friend_id' : row_id});
         alert(data.message);
     };  
     useEffect(() => {
-        setNewName(entry.username);
-    }, [entry.username]);
+        setNewName(entry.display_name);
+    }, [entry.display_name]);
     return (
         <div 
             className="d-flex align-items-center justify-content-center"
@@ -64,7 +64,7 @@ export default function RankingsRow({entry, row_id, rank, current_id, completed}
                     className={`mb-0 text-muted lead pe-2 ${hover && isSelf ? 'cursor-pointer' : ''}`}
                     onClick={() => isSelf }
                 >
-                    {entry.username}
+                    {entry.display_name}
                 </p>
             )}
 

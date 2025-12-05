@@ -10,7 +10,7 @@ from app.utils import frontend_url
 from app.forms.auth import PasswordChangeForm
 from datetime import datetime, timezone
 
-@app.route('/api/change-password', methods=['POST'])
+@app.route('/api/auth/change-password', methods=['POST'])
 @login_required
 def change_password():
     form = PasswordChangeForm()
@@ -28,7 +28,7 @@ def change_password():
                 message += f'Error in {field}: {error}' + '\n \n'
         return jsonify({"success": False, "message": message}), 200
 
-@app.route('/api/change-email', methods=['POST'])
+@app.route('/api/auth/change-email', methods=['POST'])
 @login_required
 def change_email():
     data = request.get_json()  
@@ -47,21 +47,21 @@ def change_email():
             message = 'This email is in use with a different account'
         return jsonify({'success': True, 'message': message}), 200
 
-@app.route('/api/change-username', methods=['POST'])
+@app.route('/api/auth/change-display-name', methods=['POST'])
 @login_required
 def change_username():
     data = request.get_json()  
-    new_username = data.get('username')
-    if valid_display_name(new_username):
-        current_user.username = new_username
-        message = 'Your username has been successfully changed. Visit the leaderboard to see it!'
+    new_display_name = data.get('displayName')
+    if valid_display_name(new_display_name):
+        current_user.display_name = new_display_name 
+        message = 'Your display name has been successfully changed. Visit the leaderboard to see it!'
         db.session.commit()
     else:
         message = 'Our profanity filter has not approved of your new display name.'
 
     return jsonify({'success': True, 'message' : message}), 200
 
-@app.route('/api/request-reset-password', methods=['POST'])
+@app.route('/api/auth/request-reset-password', methods=['POST'])
 def request_reset_password():
     data = request.get_json()
     email = data.get('email')
@@ -74,7 +74,7 @@ def request_reset_password():
     else:
         return jsonify({'success': False, 'message': 'There was an error sending you an email. Make sure your email was properly entered.', 'debug': reset_url, 'info': info}), 200
 
-@app.route('/api/reset-password/<token>', methods=['POST'])
+@app.route('/api/auth/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     email = verify_token(token=token, salt=password_reset_salt, expiration=3600)
     if not email:
@@ -96,7 +96,7 @@ def reset_password(token):
                 message += f'Error in {field}: {error}' + '\n \n'
         return jsonify({"success": False, "message": message}), 200
 
-@app.route('/api/verify-email/<token>')
+@app.route('/api/auth/verify-email/<token>')
 def verify_email(token):
     data = verify_token(token=token, salt=email_verify_salt, expiration=3600)
     if not data:
@@ -113,12 +113,12 @@ def verify_email(token):
         else:
             return redirect(frontend_url + "?message=Error%20Occurred") 
 
-@app.route('/api/delete-account', methods=['POST'])
+@app.route('/api/auth/delete-account', methods=['POST'])
 @login_required
 def delete_account():
     user = current_user
     CrosswordData.query.filter_by(user_id=user.id).delete(synchronize_session=False)
-    Friends.query.filter((Friends.friend_one == user.id) | (Friends.friend_two == user.id)).delete(synchronize_session=False)
+    Friendship.query.filter((Friendship.node_one == user.id) | (Friendship.node_two == user.id)).delete(synchronize_session=False)
     db.session.delete(user)
     db.session.commit()
     return jsonify({'success': True}), 200

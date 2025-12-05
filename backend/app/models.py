@@ -38,6 +38,29 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password) 
 
+    def get_friends(self):
+        rows = Friendship.query.filter((Friendship.node_one == self.id) | (Friendship.node_two == self.id)).all()
+        friend_ids = [(row.node_one if row.node_one != self.id else row.node_two) 
+                      for row in rows]
+        return User.query.filter(User.id.in_(friend_ids)).all()
+
+    def add_friend(self, friend):
+        if friend not in self.get_friends() and self != friend:
+            node_one, node_two = min(self.id, friend.id), max(self.id, friend.id)
+            db.session.add(Friendship(node_one=node_one, node_two=node_two))
+            db.session.commit()
+
+    def remove_friend(self, friend):
+        if friend in self.get_friends():
+            node_one, node_two = min(self.id, friend.id), max(self.id, friend.id)
+            friendship = Friendship.query.filter(Friendship.node_one == node_one, Friendship.node_two == node_two).first()
+            db.session.delete(friendship)
+            db.session.commit()
+
+    def invalidate_nyt_cookie(self):
+        self.encrypted_nyt_cookie = None
+        db.session.commit() 
+
 class CrosswordData(db.Model):
     __tablename__ = 'crossword_data'
     id = db.Column(db.Integer, primary_key=True)
@@ -45,8 +68,9 @@ class CrosswordData(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Puzzle Data
-    puzzle_type = db.Column(db.Enum('nyt_daily', 'nyt_mini', name='puzzle_type_enum'), nullable=False)
-    day = db.Column(db.Date, nullable=False)
+    source = db.Column(db.Enum('nyt', name='puzzle_source_enum'), nullable=False)
+    variant = db.Column(db.Enum('daily', 'mini', 'bonus', name='puzzle_variant_enum'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
 
     # Solve Data
     status = db.Column(db.Enum('complete', 'partial', 'unattempted', 'unknown', name='solve_status_enum'),
@@ -55,9 +79,15 @@ class CrosswordData(db.Model):
     solve_time = db.Column(db.Integer, nullable=True)
 
     # Metadata
-    last_fetched = db.Column(db.Date, nullable=True)
+    last_fetched = db.Column(db.DateTime(timezone=True), nullable=True)
     
-    __table_args__ = (UniqueConstraint("user_id", "day", "puzzle_type", name="unique_user_day_puzzle_type"),)
+    __table_args__ = (
+        UniqueConstraint("user_id", "date", "source", "variant", 
+                         name="unique_user_date_puzzle_type"),
+        CheckConstraint("(source = 'nyt' AND variant IN ('daily', 'mini', 'bonus'))", 
+                        name="valid_source_variant")
+    )
+
 
 class Friendship(db.Model):
     __tablename__ = 'friendships'

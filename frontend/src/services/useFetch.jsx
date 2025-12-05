@@ -5,6 +5,12 @@ export function useFetch(endpoint, deps=[]) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
+          if (!endpoint) {
+            setData(null);
+            setError(null);
+            setLoading(false);
+            return;
+        }
         const fetchData = async () => {
           try {
             const response = await fetch(endpoint);

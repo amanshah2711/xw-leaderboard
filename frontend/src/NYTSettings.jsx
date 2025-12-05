@@ -7,8 +7,9 @@ export default function NYTSettings() {
         <div className="container-fluid d-flex flex-column justify-content-center align-items-center">
             <CookieManager/>
             <SyncAll/>
-            <ExportData kind={'daily'}/>
-            <ExportData kind={'mini'}/>
+            <ExportData source={'nyt'} variant={'daily'}/>
+            <ExportData source={'nyt'} variant={'mini'}/>
+            <ExportData source={'nyt'} variant={'bonus'}/>
         </div>
     )
 }

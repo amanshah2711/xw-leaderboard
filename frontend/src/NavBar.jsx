@@ -26,8 +26,9 @@ export default function NavBar(){
       <div className="col-md-10">
           <nav className="navbar navbar-expand-lg navbar-light d-flex">
               <div className="navbar-brand"><Link to="/" className='navbar-brand text-decoration-none'>XWLeaderboard</Link></div>
-              {appear && <Link to='/mini' className={`nav-item ms-auto btn ${isActive('/mini') ? 'active' : ''}`}>Mini</Link>}
-              {appear && <Link to='/daily' className={`nav-item btn ${isActive('/daily') ? 'active' : ''}`}>Daily</Link>}
+              {appear && <Link to='/nyt-bonus' className={`nav-item ms-auto btn ${isActive('/nyt-bonus') ? 'active' : ''}`}>Bonus</Link>}
+              {appear && <Link to='/nyt-mini' className={`nav-item btn ${isActive('/nyt-mini') ? 'active' : ''}`}>Mini</Link>}
+              {appear && <Link to='/nyt-daily' className={`nav-item btn ${isActive('/nyt-daily') ? 'active' : ''}`}>Daily</Link>}
               {appear && 
                     <Dropdown>
                         <Dropdown.Toggle as={Link} className={`nav-item btn ${(isActive('/nyt-settings') || isActive('/account-settings')) ? 'active' : ''}`} id="settings-dropdown">
@@ -44,7 +45,7 @@ export default function NavBar(){
                         </Dropdown.Menu>
                     </Dropdown>
                     }
-              {appear && <Link className="nav-item btn" id="logout" onClick={() => handleClick("logout")}>Logout</Link>}
+              {appear && <Link className="nav-item btn" id="logout" onClick={() => handleClick("auth/logout")}>Logout</Link>}
           </nav>
       </div>
     <hr className="col-md-11"></hr>
