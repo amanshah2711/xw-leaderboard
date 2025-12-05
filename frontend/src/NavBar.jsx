@@ -81,7 +81,7 @@ export default function NavBar(){
                             {appear && (
                                 <li className="nav-item dropdown">
                                 <a
-                                    className={`nav-link dropdown-toggle btn ${
+                                    className={`dropdown-toggle btn border-0 ${
                                     isActive("/nyt-settings") || isActive("/account-settings")
                                         ? "active"
                                         : ""
