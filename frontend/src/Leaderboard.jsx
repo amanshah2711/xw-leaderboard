@@ -17,7 +17,7 @@ export default function Leaderboard ({source, variant}) {
   const {data, loading, error } = useFetch(`/api/puzzles/${source}/${variant}/latest/date`);
 
   const handleRefresh = () => {
-    fetch(`/api/puzzles/${source}/${variant}/${formatter.format(day)}/rankings?refresh=true`)
+    fetch(`/api/puzzles/${source}/${variant}/${formatter.format(date)}/rankings?refresh=true`)
     .then(res => res.json())
     .then(() => {
       setTimeout(() => {

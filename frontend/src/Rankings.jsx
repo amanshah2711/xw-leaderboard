@@ -11,7 +11,7 @@ const formatter = new Intl.DateTimeFormat("en-CA", {
 
 
 export default function Rankings({date, source, variant, refreshTrigger}) {
-    const {data, loading, error } = useFetch(`/api/puzzles/${source}/${variant}/${formatter.format(date)}/rankings`, [date, refreshTrigger]);
+    const {data, loading, error } = useFetch(`/api/puzzles/${source}/${variant}/${formatter.format(date)}/rankings`, [date, source, variant, refreshTrigger]);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
