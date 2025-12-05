@@ -1,6 +1,7 @@
 import {Link, useLocation, useNavigate, useMatch} from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import Collapse from 'bootstrap/js/dist/collapse';
+import { useRef, useEffect } from "react";
 export default function NavBar(){
     const location = useLocation();
     const navigate = useNavigate();
@@ -21,32 +22,97 @@ export default function NavBar(){
             console.error('Logout failed:', error);
         }
     };  
-  return (
-    <div className="row justify-content-md-center d-flex mb-2">
-      <div className="col-md-10">
-          <nav className="navbar navbar-expand-lg navbar-light d-flex">
-              <div className="navbar-brand"><Link to="/" className='navbar-brand text-decoration-none'>XWLeaderboard</Link></div>
-              {appear && <Link to='/nyt-bonus' className={`nav-item ms-auto btn ${isActive('/nyt-bonus') ? 'active' : ''}`}>Bonus</Link>}
-              {appear && <Link to='/nyt-mini' className={`nav-item btn ${isActive('/nyt-mini') ? 'active' : ''}`}>Mini</Link>}
-              {appear && <Link to='/nyt-daily' className={`nav-item btn ${isActive('/nyt-daily') ? 'active' : ''}`}>Daily</Link>}
-              {appear && 
-                    <Dropdown>
-                        <Dropdown.Toggle as={Link} className={`nav-item btn ${(isActive('/nyt-settings') || isActive('/account-settings')) ? 'active' : ''}`} id="settings-dropdown">
-                            Settings
-                        </Dropdown.Toggle>
+  const navbarRef = useRef(null);
+  const bsCollapseRef = useRef(null);
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item as={Link} to="/account-settings">
-                            Account Settings
-                            </Dropdown.Item>
-                            <Dropdown.Item as={Link} to="/nyt-settings">
-                            NYT Settings
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+  useEffect(() => {
+    if (navbarRef.current) {
+      bsCollapseRef.current = new Collapse(navbarRef.current, { toggle: false });
+    }
+  }, []);
+
+  const closeNavbar = () => {
+    if (bsCollapseRef.current && navbarRef.current.classList.contains('show')) {
+      bsCollapseRef.current.hide();
+    }
+  };
+
+  const toggleNavbar = () => {
+  if (bsCollapseRef.current) {
+    bsCollapseRef.current.toggle();
+  }
+};
+  return (
+    <div className="row justify-content-center mb-2">
+      <div className="col-md-10">
+          <div className="navbar navbar-expand-lg navbar-light d-flex">
+              <div className="navbar-brand"><Link to="/" className='navbar-brand text-decoration-none'>XWLeaderboard</Link></div>
+                    {
+                    appear && 
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            aria-controls="navbarNav"
+                            aria-expanded={false}
+                            aria-label="Toggle navigation"
+                            onClick={toggleNavbar}
+                        >                        
+                            <span className="navbar-toggler-icon"></span>
+                        </button>                    
                     }
-              {appear && <Link className="nav-item btn" id="logout" onClick={() => handleClick("auth/logout")}>Logout</Link>}
-          </nav>
+
+               <div className="collapse navbar-collapse" id="navbarNav" ref={navbarRef}>
+                    <ul className="navbar-nav ms-auto">
+                        {appear && 
+                            <li className="nav-item">
+                                <Link to='/nyt-bonus' className={`ms-auto btn ${isActive('/nyt-bonus') ? 'active' : ''}`} onClick={closeNavbar}>Bonus</Link>
+                            </li>
+                        }
+                        {appear && 
+                            <li className="nav-item">
+                                <Link to='/nyt-mini' className={`btn ${isActive('/nyt-mini') ? 'active' : ''}`}onClick={closeNavbar}>Mini</Link>
+                            </li>
+                        }
+                        {appear && 
+                            <li className="nav-item">
+                                <Link to='/nyt-daily' className={`btn ${isActive('/nyt-daily') ? 'active' : ''}`}onClick={closeNavbar}>Daily</Link>
+                            </li>
+                        }
+                            {appear && (
+                                <li className="nav-item dropdown">
+                                <a
+                                    className={`nav-link dropdown-toggle btn ${
+                                    isActive("/nyt-settings") || isActive("/account-settings")
+                                        ? "active"
+                                        : ""
+                                    }`}
+                                    href="#"
+                                    id="settingsDropdown"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Settings
+                                </a>
+                                <ul className="dropdown-menu" aria-labelledby="settingsDropdown">
+                                    <li>
+                                    <Link className="dropdown-item text-center" to="/account-settings"onClick={closeNavbar}>
+                                        Account Settings
+                                    </Link>
+                                    </li>
+                                    <li>
+                                    <Link className="dropdown-item text-center" to="/nyt-settings"onClick={closeNavbar}>
+                                        NYT Settings
+                                    </Link>
+                                    </li>
+                                </ul>
+                                </li>
+                            )}
+
+                        {appear && <Link className="nav-item btn" id="logout" onClick={() => handleClick("auth/logout")}>Logout</Link>}
+                    </ul>
+              </div>
+          </div>
       </div>
     <hr className="col-md-11"></hr>
   </div>
