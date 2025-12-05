@@ -20,10 +20,9 @@ now_in_new_york = datetime.now(new_york_tz)
 formatted_date = now_in_new_york.strftime('%Y-%m-%d')
 
 # Archive start date
-#archive_start_date = datetime(1993, 11, 21, tzinfo=new_york_tz).date()
-archive_start_date = datetime(2025, 1, 1, tzinfo=new_york_tz).date()
-#mini_start_date = datetime(2014, 8, 21, tzinfo=new_york_tz).date()
-mini_start_date = datetime(2025, 1, 1, tzinfo=new_york_tz).date()
+archive_start_date = datetime(1993, 11, 21, tzinfo=new_york_tz).date()
+
+mini_start_date = datetime(2014, 8, 21, tzinfo=new_york_tz).date()
 
 bonus_start_date = datetime(1997, 2, 1, tzinfo=new_york_tz).date()
 
