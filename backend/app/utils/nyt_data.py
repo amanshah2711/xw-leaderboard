@@ -77,6 +77,7 @@ nyt_bonus_puzzle_solve_data = lambda game_id : f'{nyt_base_url}/{backend_endpoin
 
 create_header = lambda cookie : {'Cookie' : cookie, 'User-Agent' : 'XWLeaderboard/1.0'}
 
+
 def valid_puzzle_date(date, variant):
     datetime_in_new_york = datetime.now(tz=ZoneInfo('America/New_York'))
     upper_bound = datetime_in_new_york.date()
