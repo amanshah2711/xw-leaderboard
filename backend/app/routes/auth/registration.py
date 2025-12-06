@@ -10,13 +10,13 @@ from app.forms.auth import RegistrationForm
 from datetime import datetime, timezone
 
 
-@app.route('/api/auth/register', methods=['POST'])
+@app.post('/api/auth/register')
 def register():
     form = RegistrationForm()
     if form.validate():
         data = request.get_json()
 
-        username = data.get('username')
+        display_name = data.get('displayName')
         email = data.get('email')
         password = data.get('password')
 
@@ -24,7 +24,7 @@ def register():
 
         if User.query.filter_by(email=email).first():
             return jsonify({"success": False, "message": "Email is already registered"}), 200
-        user = User(username=username, email=email, invite_link=invite_link)
+        user = User(display_name=display_name, email=email, invite_link=invite_link)
         user.set_password(password)
         success, info = create_and_send_verification_email(email, user.id)
         if success:

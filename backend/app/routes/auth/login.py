@@ -6,7 +6,7 @@ from app.models import User, db
 from app.utils.mail import create_and_send_verification_email
 from datetime import datetime, timezone
 
-@app.route('/api/auth/login', methods=['POST'])
+@app.post('/api/auth/login')
 def login():
     data = request.get_json()  
     email = data.get('email')

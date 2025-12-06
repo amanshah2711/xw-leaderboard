@@ -5,7 +5,7 @@ import { useSubmit } from "./services/useSubmit";
 
 export default function RegistrationManager({setShowRegistrationManager, message, setMessage}) {
     const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
+    const [displayName, setDisplayName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -14,7 +14,7 @@ export default function RegistrationManager({setShowRegistrationManager, message
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password == confirmPassword) {
-            const data = await submitData({email: email, password: password, username: username});
+            const data = await submitData({email: email, password: password, displayName: displayName});
             console.log(data);
             if (data.success) {
                 setShowRegistrationManager(false);
@@ -34,7 +34,7 @@ export default function RegistrationManager({setShowRegistrationManager, message
                     <form>
                         <div className="form-group text-start mb-4">
                             <label>Display Name:</label>
-                            <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" className="form-control" placeholder="Display Name" required/>
+                            <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} autoComplete="off" className="form-control" placeholder="Display Name" required/>
                         </div>
                         <div className="row">
                             <div></div>

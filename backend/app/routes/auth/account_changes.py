@@ -10,7 +10,7 @@ from app.utils import frontend_url
 from app.forms.auth import PasswordChangeForm
 from datetime import datetime, timezone
 
-@app.route('/api/auth/change-password', methods=['POST'])
+@app.post('/api/auth/change-password')
 @login_required
 def change_password():
     form = PasswordChangeForm()
@@ -28,7 +28,7 @@ def change_password():
                 message += f'Error in {field}: {error}' + '\n \n'
         return jsonify({"success": False, "message": message}), 200
 
-@app.route('/api/auth/change-email', methods=['POST'])
+@app.post('/api/auth/change-email')
 @login_required
 def change_email():
     data = request.get_json()  
@@ -47,9 +47,9 @@ def change_email():
             message = 'This email is in use with a different account'
         return jsonify({'success': True, 'message': message}), 200
 
-@app.route('/api/auth/change-display-name', methods=['POST'])
+@app.post('/api/auth/change-display-name')
 @login_required
-def change_username():
+def change_display_name():
     data = request.get_json()  
     new_display_name = data.get('displayName')
     if valid_display_name(new_display_name):
@@ -61,7 +61,7 @@ def change_username():
 
     return jsonify({'success': True, 'message' : message}), 200
 
-@app.route('/api/auth/request-reset-password', methods=['POST'])
+@app.post('/api/auth/request-reset-password')
 def request_reset_password():
     data = request.get_json()
     email = data.get('email')
@@ -74,7 +74,7 @@ def request_reset_password():
     else:
         return jsonify({'success': False, 'message': 'There was an error sending you an email. Make sure your email was properly entered.', 'debug': reset_url, 'info': info}), 200
 
-@app.route('/api/auth/reset-password/<token>', methods=['POST'])
+@app.post('/api/auth/reset-password/<token>')
 def reset_password(token):
     email = verify_token(token=token, salt=password_reset_salt, expiration=3600)
     if not email:
