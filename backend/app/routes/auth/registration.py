@@ -17,6 +17,7 @@ def register():
         data = request.get_json()
 
         display_name = data.get('displayName')
+        print(display_name)
         email = data.get('email')
         password = data.get('password')
 
