@@ -113,7 +113,7 @@ def verify_email(token):
         else:
             return redirect(frontend_url + "?message=Error%20Occurred") 
 
-@app.route('/api/auth/delete-account', methods=['POST'])
+@app.post('/api/auth/delete-account')
 @login_required
 def delete_account():
     user = current_user
