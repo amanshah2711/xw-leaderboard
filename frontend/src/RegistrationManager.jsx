@@ -15,7 +15,6 @@ export default function RegistrationManager({setShowRegistrationManager, message
         e.preventDefault();
         if (password == confirmPassword) {
             const data = await submitData({email: email, password: password, displayName: displayName});
-            console.log(data);
             if (data.success) {
                 setShowRegistrationManager(false);
             }
