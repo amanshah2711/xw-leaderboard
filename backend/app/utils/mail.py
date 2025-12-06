@@ -18,7 +18,7 @@ def send_email_verification_email(verify_link, addressee):
 
 def create_and_send_verification_email(addressee, id):
         token = generate_token({'addressee' : addressee, 'id' : id}, email_verify_salt)
-        verify_url = frontend_url + '/api/verify-email/' + token
+        verify_url = frontend_url + '/api/auth/verify-email/' + token
         return send_email_verification_email(verify_link=verify_url, addressee=addressee)
     
 def email_wrapper(addressee, subject, body):
