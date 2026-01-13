@@ -6,6 +6,7 @@ from app.utils.encryption import decrypt_cookie, encrypt_cookie
 from app.utils.nyt_data import NYTRequestError, nyt_request, nyt_puzzle_metadata
 from datetime import datetime
 from zoneinfo import ZoneInfo
+
 @app.route('/api/auth/nyt/store-cookie', methods=['POST'])
 @login_required
 def store_cookie(): 

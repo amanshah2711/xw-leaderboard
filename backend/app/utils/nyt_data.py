@@ -95,6 +95,19 @@ def valid_puzzle_date(date, variant):
     else:
         return False
 
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+class DBCommitError(Exception):
+    def __init__(self, e):
+        super().__init__(e)
+        self.original_exception = e
+
+def commit_or_raise():
+    try:
+        db.session.commit()
+    except (IntegrityError, SQLAlchemyError) as e:
+        db.session.rollback()
+        raise DBCommitError(e)
+
 class NYTRequestError(Exception):
     pass
 
@@ -117,9 +130,8 @@ def nyt_request(url, user, session=None):
                 continue
             elif response.status_code == 200:
                 return response.json()
-               
             else:
-                raise NYTRequestError(f'request failed with status {response.status_code}')
+                raise NYTRequestError(f'Request failed with status {response.status_code}')
         except requests.exceptions.RequestException as e:
             if attempt == 2:
                 raise NYTRequestError(f"Request failed: {e}")

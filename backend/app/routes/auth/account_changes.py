@@ -7,6 +7,7 @@ from app.utils.mail import send_reset_email, create_and_send_verification_email,
 from app.utils.social import valid_display_name
 from app.utils.encryption import generate_token, verify_token, password_reset_salt
 from app.utils import frontend_url
+from app.utils.nyt_data import commit_or_raise
 from app.forms.auth import PasswordChangeForm
 from datetime import datetime, timezone
 
@@ -18,7 +19,7 @@ def change_password():
         data = request.get_json()  
         password = data.get('password')
         current_user.set_password(password) 
-        db.session.commit()
+        commit_or_raise()
         return jsonify({'success': True, 'message': 'Your password has been successfully changed'}), 200
     else:
         message = ''
@@ -55,7 +56,7 @@ def change_display_name():
     if valid_display_name(new_display_name):
         current_user.display_name = new_display_name 
         message = 'Your display name has been successfully changed. Visit the leaderboard to see it!'
-        db.session.commit()
+        commit_or_raise()
     else:
         message = 'Our profanity filter has not approved of your new display name.'
 
@@ -86,7 +87,7 @@ def reset_password(token):
         user = User.query.filter_by(email=email).first()
         new_password = data.get('password')
         user.set_password(new_password)
-        db.session.commit()
+        commit_or_raise()
         return jsonify({'success' : False, 'message' : 'Password successfully changed'}), 200
     else:
         message = ''
@@ -108,7 +109,7 @@ def verify_email(token):
             user.email_verified = True
             user.email_verified_at = datetime.now(timezone.utc)
             user.account_status = 'active'
-            db.session.commit()
+            commit_or_raise()
             return redirect(frontend_url + "?message=Email%20Verified%20Successfully") 
         else:
             return redirect(frontend_url + "?message=Error%20Occurred") 
@@ -120,5 +121,5 @@ def delete_account():
     CrosswordData.query.filter_by(user_id=user.id).delete(synchronize_session=False)
     Friendship.query.filter((Friendship.node_one == user.id) | (Friendship.node_two == user.id)).delete(synchronize_session=False)
     db.session.delete(user)
-    db.session.commit()
+    commit_or_raise()
     return jsonify({'success': True}), 200

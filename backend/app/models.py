@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 from sqlalchemy import UniqueConstraint, CheckConstraint
 import os
 
-
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +58,7 @@ class User(UserMixin, db.Model):
 
     def invalidate_nyt_cookie(self):
         self.encrypted_nyt_cookie = None
-        db.session.commit() 
+        db.session.commit()
 
 class CrosswordData(db.Model):
     __tablename__ = 'crossword_data'

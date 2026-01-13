@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
+from app.utils.logging import *
 import os
 
 
@@ -16,6 +17,7 @@ CORS(app, origins=cors_allowed_origins)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL','sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'default-secret-key')
+
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -32,6 +34,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))  # Retrieve user by ID from the database
 
 from werkzeug.routing import BaseConverter, ValidationError
+
 class NYTVariantConverter(BaseConverter):
     def __init__(self, map):
         super().__init__(map)
@@ -49,6 +52,8 @@ app.url_map.converters['nyt_variant'] = NYTVariantConverter
 
 from flask import Flask, jsonify
 from app.utils.nyt_data import NYTRequestError
+from app.utils.nyt_data import DBCommitError
+from sqlalchemy.exc import SQLAlchemyError
 
 def register_error_handlers(app: Flask):
     @app.errorhandler(NYTRequestError)
@@ -58,5 +63,23 @@ def register_error_handlers(app: Flask):
             "error": "NYT API request error",
             "message": str(error)
         }), 502
+
+    @app.errorhandler(DBCommitError)
+    def handle_database_commit_error(error):
+        app.logger.error(f"Database Commit Error: {error}", exc_info=True)
+        return jsonify({
+            "error": "An error occured committing changes to the database.",
+            "message": str(error)
+        }), 500
+
+    @app.errorhandler(SQLAlchemyError)
+    def handle_sql_alchemy_error(error):
+        app.logger.error(f"Database failure of some kind occurred: {error}", exc_info=True)
+        return jsonify({
+            "error": "The database has failed in some form.",
+            "message": str(error)
+        }), 500
+
+register_error_handlers(app)
 
 from .routes import *

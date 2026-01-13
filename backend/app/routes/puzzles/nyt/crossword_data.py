@@ -5,6 +5,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from app.models import CrosswordData, db
 from app.utils.nyt_data import nyt_bonus_puzzle_url,nyt_mini_puzzle_url, nyt_puzzle_url, aggregrate_solved_puzzles, upsert, valid_puzzle_date, fupsert_by_date, NYTRequestError
+from app.utils.nyt_data import commit_or_raise
 
 import time
 import requests
@@ -12,6 +13,9 @@ from threading import Thread
 
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+import logging
+logger = logging.getLogger(__name__)
+
 
 @app.get('/api/puzzles/nyt/<nyt_variant:variant>/latest/date')
 @login_required
@@ -41,7 +45,6 @@ def get_puzzle_metadata(date_string, variant):
         if valid_puzzle_date(date=date, variant=variant):
             next_date = date + timedelta(days=1)
             prev_date = date + timedelta(days=-1)
-            print(prev_date, date, 'hohoohoh')
             next_date = next_date if valid_puzzle_date(date=next_date, variant=variant) else date
             prev_date = prev_date if valid_puzzle_date(date=prev_date, variant=variant) else date
             return jsonify({'exists' : True, 'date' : date.isoformat(), 'next_date' : next_date.isoformat(), 'prev_date' : prev_date.isoformat()})
@@ -88,16 +91,17 @@ def get_puzzle_rankings(date_string, variant):
     ids_to_check = group_ids - completed_puzzle_user_ids
     for id in ids_to_check:
         user = id_to_user[id]
-        try:
-            if user.encrypted_nyt_cookie:
+        if user.encrypted_nyt_cookie:
+            try:
                 status, solve_time = fupsert_by_date(user, date=target_date, variant=variant, refresh=refresh, session=None)
+            except NYTRequestError as e:
+                logger.info('A request to the NYT has failed when trying to query the following date' + str(target_date)) 
+            else:
                 if status == 'complete':
                     completed_puzzle_data.append({'display_name' : user.display_name, 'solve_time': solve_time, 'id': id})
                     completed_puzzle_user_ids.add(id)
-        except NYTRequestError as e:
-            pass
 
-    db.session.commit()
+    commit_or_raise()
 
     incompleted_ids = group_ids - completed_puzzle_user_ids
     incompleted_data = [{'display_name' : id_to_user[id].display_name, 'id' : id} for id in incompleted_ids]
@@ -134,7 +138,7 @@ def sync_all(variant, user):
                     status = 'unattempted'
                     solve_time = None
                     upsert(user, target_date, status, solve_time, 0, variant=variant)
-            db.session.commit()
+            commit_or_raise()
 
 
 @app.post('/api/puzzles/nyt/<nyt_variant:variant>/sync-all')
