@@ -12,24 +12,39 @@ import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 import AccountSettings from './AccountSettings';
 import NYTSettings from './NYTSettings';
+import { RequireAuth } from './RequireAuth';
+
 
 function App() {
-    const { data, loading, error } = useFetch("/api/security/csrf-token");
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-    if (data.csrf_token) {
-      window.csrfToken = data.csrf_token
+
+ const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshTrigger((prev) => prev + 1);
+    }, 25 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const { data, loading, error } = useFetch("/api/security/csrf-token", [refreshTrigger]);
+
+  useEffect(() => {
+    if (data && data.csrf_token) {
+      window.csrfToken = data.csrf_token;
     }
+  }, [data]);
+
+  if (loading) return <p>Loading...</p>;
   return (
     <Router>
       <NavBar/>
       <Routes>
         <Route path="/" element={<HomePage/>}/>
-        <Route path="/account-settings" element={<AccountSettings/>}/>
-        <Route path="/nyt-daily" element={<Leaderboard key='nyt-daily' source={'nyt'} variant={"daily"}/>}/>
-        <Route path="/nyt-mini" element={<Leaderboard key='nyt-mini' source={'nyt'} variant={"mini"}/>}/>
-        <Route path="/nyt-bonus" element={<Leaderboard key='nyt-bonus' source={'nyt'} variant={"bonus"}/>}/>
-        <Route path="/nyt-settings" element={<NYTSettings/>}/>
+        <Route path="/account-settings" element={<RequireAuth><AccountSettings/></RequireAuth>}/>
+        <Route path="/nyt-daily" element={<RequireAuth><Leaderboard key='nyt-daily' source={'nyt'} variant={"daily"}/></RequireAuth>}/>
+        <Route path="/nyt-mini" element={<RequireAuth><Leaderboard key='nyt-mini' source={'nyt'} variant={"mini"}/></RequireAuth>}/>
+        <Route path="/nyt-bonus" element={<RequireAuth><Leaderboard key='nyt-bonus' source={'nyt'} variant={"bonus"}/></RequireAuth>}/>
+        <Route path="/nyt-settings" element={<RequireAuth><NYTSettings/></RequireAuth>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password/:token" element={<ResetPassword/>}/>
       </Routes>

@@ -44,4 +44,4 @@ def logout():
 
 @app.route('/api/auth/check-login')
 def check_login():
-    return jsonify({'logged_in' : bool(current_user.is_authenticated)})
+    return jsonify({'logged_in' : bool(current_user.is_authenticated)}), 200
