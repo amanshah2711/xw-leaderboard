@@ -172,7 +172,7 @@ def upsert(user, date, status, solve_time, percent_filled, variant='daily'):
     entry = CrosswordData.query.filter(CrosswordData.user_id == user.id, CrosswordData.date == date, CrosswordData.source == 'nyt', CrosswordData.variant == variant).first()
     utc_now = datetime.now(timezone.utc)
     if entry:
-        entry.status, entry.solve_time, entry.last_fetched = status, solve_time, utc_now 
+        entry.status, entry.solve_time, entry.last_fetched, entry.percent_filled = status, solve_time, utc_now, percent_filled
     else:
         stmt = insert(CrosswordData).values(user_id=user.id, date=date, solve_time=solve_time, status=status, percent_filled=percent_filled, source='nyt', variant=variant, last_fetched=utc_now).on_conflict_do_nothing(index_elements=['user_id', 'date','source', 'variant'])
         db.session.execute(stmt)

@@ -17,19 +17,31 @@ import { RequireAuth } from './RequireAuth';
 
 function App() {
 
- const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { data, loading, error } = useFetch("/api/security/csrf-token", [refreshTrigger]);
 
+  // initial + interval refresh
   useEffect(() => {
     const interval = setInterval(() => {
-      setRefreshTrigger((prev) => prev + 1);
+      setRefreshTrigger(prev => prev + 1);
     }, 25 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const { data, loading, error } = useFetch("/api/security/csrf-token", [refreshTrigger]);
-
+  // refresh on tab focus
   useEffect(() => {
-    if (data && data.csrf_token) {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        setRefreshTrigger(prev => prev + 1);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, []);
+
+  // store token
+  useEffect(() => {
+    if (data?.csrf_token) {
       window.csrfToken = data.csrf_token;
     }
   }, [data]);

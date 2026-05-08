@@ -1,5 +1,5 @@
 
-from flask import Flask
+from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -28,6 +28,10 @@ csrf = CSRFProtect(app)
 
 from .models import *
 
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    if request.path.startswith('/api/'):
+        return jsonify({"error": "Unauthorized"}), 401    
 
 @login_manager.user_loader
 def load_user(user_id):
